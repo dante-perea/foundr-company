@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand sage — canonical Foundr accent */
+  --color-sage-300: #b6d3a3;
+  --color-sage-400: #9bbf83;
+  --color-sage-500: #7fa667;
+
+  /* Slate scale */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+
+  /* Warm accents */
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  background: var(--color-slate-950);
+  color: var(--color-slate-100);
+  -webkit-font-smoothing: antialiased;
+}
