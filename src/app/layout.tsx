@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins, Roboto, Inconsolata } from 'next/font/google'
 import './globals.css'
+import { Header, Footer } from '@/components/site'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -45,7 +46,11 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${roboto.variable} ${inconsolata.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   )
 }
