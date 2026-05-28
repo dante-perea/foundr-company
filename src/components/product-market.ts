@@ -1,3 +1,5 @@
+import { marketExtensionsBySlug } from './product-market-extensions'
+
 /**
  * MECE market analysis for every foundr.* product.
  *
@@ -58,6 +60,71 @@ export interface MarketInsight {
   incumbents: [Incumbent, Incumbent, Incumbent]
   /** Where foundr.X actually wins — 4-6 bullets */
   winThesis: string[]
+  /** 12-month strategic moves, ranked by leverage (descending). Optional. */
+  strategicMoves?: StrategicMove[]
+  /** Economic moats — what we can hold and what we can't. Optional. */
+  moats?: Moats
+  /** Where SAM × incumbent vulnerability × unaddressed pain converges. Optional. */
+  synthesis?: SynthesisRow[]
+  /** 5 unaddressed power-user pains with real quotes. Optional. */
+  powerUserPain?: PowerUserPain[]
+}
+
+// ── 4 new strategic sections (mirrors the agentik-host report shape) ──────
+
+export interface StrategicMove {
+  title: string
+  body: string
+  /** Optional timing tag (e.g. "v0.5", "Q3", "immediate"). */
+  timing?: string
+}
+
+export interface MoatItem {
+  title: string
+  body: string
+}
+
+export interface Moats {
+  /** What we can defensibly hold. */
+  hold: MoatItem[]
+  /** What we cannot hold — incumbents can match or copy. */
+  cannotHold: MoatItem[]
+  /** Optional — switching costs that work in our favor. */
+  switchingFor?: string[]
+  /** Optional — switching costs that work against us. */
+  switchingAgainst?: string[]
+}
+
+export type SynthesisStatus = 'shipped' | 'partial' | 'gap'
+
+export interface SynthesisRow {
+  wedge: string
+  segment: string
+  vulnerability: string
+  pain: string
+  status: SynthesisStatus
+  /** Optional supporting note rendered after the status. */
+  note?: string
+}
+
+export interface PowerUserQuote {
+  text: string
+  attribution: string
+}
+
+export interface PowerUserPain {
+  /** "A", "B", "C", "D", "E" */
+  label: string
+  title: string
+  /** 2-4 quotes ≤125 chars from real users (Reddit, HN, GitHub, X) */
+  quotes: PowerUserQuote[]
+  /** One-sentence structural reason incumbents can't fix it. */
+  whyIncumbentsCantFix: string
+  /** Our coverage — status + 1-sentence detail. */
+  coverage: {
+    status: SynthesisStatus
+    detail: string
+  }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -66,7 +133,7 @@ const s = (label: string, url: string): Source => ({ label, url })
 
 // ── Market insights by product slug ───────────────────────────────────────
 
-export const marketBySlug: Record<string, MarketInsight> = {
+const baseMarketBySlug: Record<string, MarketInsight> = {
   'foundr-world': {
     tam: {
       headline: '~$11–15B / yr (2026), heading to $90B+ by 2030',
@@ -1117,3 +1184,13 @@ export const marketBySlug: Record<string, MarketInsight> = {
     ],
   },
 }
+
+// ── Merge in the 4 strategic sections (strategic moves / moats / synthesis /
+//    power-user pain) from product-market-extensions.ts ──────────────────────
+
+export const marketBySlug: Record<string, MarketInsight> = Object.fromEntries(
+  Object.entries(baseMarketBySlug).map(([slug, base]) => [
+    slug,
+    { ...base, ...(marketExtensionsBySlug[slug] ?? {}) },
+  ]),
+)
