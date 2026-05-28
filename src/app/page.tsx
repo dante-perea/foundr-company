@@ -84,13 +84,20 @@ function ProductCard({ product }: { product: Product }) {
   const [head, tld] = product.name.split('.')
 
   return (
-    <li>
+    <li
+      className={`group relative flex h-full flex-col rounded-md border border-line bg-surface p-6 transition hover:border-line-strong hover:shadow-sm ${
+        product.status === 'soon' ? 'opacity-75' : ''
+      }`}
+    >
+      {/* Stretched internal link covers the whole card */}
       <Link
         href={`/${product.slug}`}
-        className={`block h-full rounded-md border border-line bg-surface p-6 transition hover:border-line-strong hover:shadow-sm ${
-          product.status === 'soon' ? 'opacity-75' : ''
-        }`}
-      >
+        aria-label={`Read about ${product.name}`}
+        className="absolute inset-0 z-0 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      />
+
+      {/* Card content sits above the link but doesn't capture clicks */}
+      <div className="pointer-events-none relative z-10">
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-display text-base font-medium text-ink">
             {head}
@@ -101,7 +108,21 @@ function ProductCard({ product }: { product: Product }) {
         <p className="mt-2 text-sm leading-relaxed text-muted">
           {product.tagline}
         </p>
-      </Link>
+      </div>
+
+      {/* External "Go site" button — clickable on top of the stretched link */}
+      <div className="relative z-20 mt-4 flex justify-end">
+        <a
+          href={`https://${product.name}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Visit ${product.name} site`}
+          className="inline-flex items-center gap-1 rounded-md border border-line bg-surface px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted transition hover:border-accent hover:text-accent"
+        >
+          Go site
+          <span aria-hidden>↗</span>
+        </a>
+      </div>
     </li>
   )
 }
