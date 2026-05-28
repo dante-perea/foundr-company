@@ -21,15 +21,19 @@ jobs:
           LAB_DOMAIN=$(jq -r '.lab_domain' .claude-plugin/project-meta.json)
           echo "lab_domain=$LAB_DOMAIN" >> $GITHUB_OUTPUT
 
-      - name: Read .vercel/project.json
+      # Project + org IDs come from GitHub repo secrets (NOT .vercel/project.json,
+      # which Vercel CLI gitignores by design). perea-ai:start-project and
+      # perea-ai:retrofit set these as part of the backbone install.
+      - name: Read Vercel project/org IDs from secrets
         id: vercel
+        env:
+          PID: ${{ secrets.VERCEL_PROJECT_ID }}
+          ORG: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          if [ ! -f .vercel/project.json ]; then
-            echo "::error::.vercel/project.json missing — run 'vercel link' locally and commit, or set up the GH→Vercel integration so this file is generated"
+          if [ -z "$PID" ] || [ -z "$ORG" ]; then
+            echo "::error::Secrets VERCEL_PROJECT_ID and VERCEL_ORG_ID are required. Set via:  gh secret set VERCEL_PROJECT_ID --repo \$GITHUB_REPOSITORY --body prj_xxx ; gh secret set VERCEL_ORG_ID --repo \$GITHUB_REPOSITORY --body team_xxx"
             exit 1
           fi
-          PID=$(jq -r '.projectId' .vercel/project.json)
-          ORG=$(jq -r '.orgId' .vercel/project.json)
           echo "project_id=$PID" >> $GITHUB_OUTPUT
           echo "org_id=$ORG" >> $GITHUB_OUTPUT
 

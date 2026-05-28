@@ -11,19 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Version omitted intentionally — pnpm/action-setup@v4 will honor
+      # package.json's `packageManager` field. Specifying both produces
+      # ERR_PNPM_BAD_PM_VERSION on projects that declare packageManager.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Typecheck
-        run: pnpm typecheck
-      - name: Build
-        run: pnpm build
-      - name: Test (if test script exists)
+      - name: Typecheck (if script exists)
+        run: |
+          if jq -e '.scripts.typecheck' package.json > /dev/null; then
+            pnpm typecheck
+          else
+            echo "No typecheck script — skipping"
+          fi
+      - name: Build (if script exists)
+        run: |
+          if jq -e '.scripts.build' package.json > /dev/null; then
+            pnpm build
+          else
+            echo "No build script — skipping"
+          fi
+      - name: Test (if script exists)
         run: |
           if jq -e '.scripts.test' package.json > /dev/null; then
             pnpm test
