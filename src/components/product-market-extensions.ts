@@ -1315,4 +1315,401 @@ export const marketExtensionsBySlug: Record<string, MarketExt> = {
       },
     ],
   },
+
+  'foundr-mobile': {
+    strategicMoves: [
+      { title: 'Ship the voice-drop primitive first', body: 'Single-screen MVP that records, transcribes (on-device + cloud fallback), and routes to foundr-backlog via the existing MCP. Only feature that needs to exist on day 1.', timing: 'Q1' },
+      { title: 'Native Swift / Kotlin from day 0 — not React Native, not Capacitor', body: 'Linear Mobile proved the user perception delta; Notion\'s web-wrapper apology thread is the cautionary tale.', timing: 'Q1' },
+      { title: 'Push-with-context API', body: 'Agents on desktop/server post a "Need approval: <args>" → phone wakes → inline tap-to-approve. The OpenClaw/Aerostack gap that exists in production today.', timing: 'Q2' },
+      { title: 'Live Activity for the foundr.world room', body: 'Render the founder\'s current room with avatar + agent count + recent event on Lock Screen / Dynamic Island. Steals 6 wake-ups/day of mindshare from Slack and ChatGPT.', timing: 'Q2' },
+      { title: 'Quote-tweet free tier with shareable audio cards', body: 'Every drop is exportable as a 9:16 audio-card → IG/TikTok/X. Founders are creators; this is the install loop.', timing: 'Q2' },
+      { title: 'MCP-over-mobile SDK', body: 'Third-party founder tools (foundr.host, foundr.company) register their MCP server with foundr.mobile and inherit voice + push + approval UI. Network effect compounds.', timing: 'Q3' },
+      { title: 'Apple Watch + Vision Pro companion stubs', body: 'Wrist drop is the next voice-drop, headset is the next room-glance. Cheap to stub, expensive for incumbents to copy without their own ecosystem.', timing: 'Q4' },
+    ],
+    moats: {
+      hold: [
+        { title: 'Ecosystem identity (foundr.you) × cross-product graph', body: 'Every foundr.* product feeds the same identity and event stream; the mobile client gets richer the more verticals ship. ChatGPT/Claude cannot fake this without buying a SaaS suite.' },
+        { title: 'First-class push semantics tied to agents the user owns', body: 'Agents live in the founder\'s room/server/laptop, not on Anthropic\'s relay. Push is end-to-end ours — the Claude /remote-control bug list is proof the relay-based approach is a graveyard.' },
+        { title: 'Free-quote-tweet viral loop', body: 'Audio-card share format ties install attribution to a creator graph the App Store cannot rate-limit. ChatGPT/Claude do not have a shareable artifact at all.' },
+      ],
+      cannotHold: [
+        { title: 'Generic voice-to-text', body: 'Whisper, Fish, ElevenLabs, Apple on-device dictation, Granola, Otter all commoditize this. Don\'t market it as a moat.' },
+        { title: '"Native iOS speed"', body: 'Linear already proved it; ChatGPT/Claude can hire iOS teams next quarter. Native speed is a prerequisite, not a moat.' },
+        { title: 'MCP support per se', body: 'Open protocol Anthropic owns the spec. Expo / Cursor / VS Code all ship MCP-over-mobile patterns. The moat is WHICH MCP servers and WHOSE identity, not the protocol.' },
+      ],
+      switchingFor: [
+        'Room layout, agent fleet, backlog history, credit balance all live in foundr.you — leaving foundr.mobile means leaving their world, not just a chat history',
+        'Inbound push wiring (Stripe sub event → Slack DM → foundr.mobile approval card) is per-tool OAuth setup the founder will not redo at a competitor',
+      ],
+      switchingAgainst: [
+        'Founders already pay for ChatGPT and Claude mobile; we are a third sub unless we displace one — pricing has to be defensible against "I already have Claude"',
+        'Notion / Linear / Granola already have meeting-notes + project muscle memory; we cannot beat them at their core jobs, only at the ecosystem orchestrator job they aren\'t aiming for',
+      ],
+    },
+    synthesis: [
+      { wedge: 'Voice-drop to agent backlog', segment: 'AI-native solo founder', vulnerability: 'ChatGPT voice capped 1h/day; Claude has none', pain: 'Idea-loss between desk sessions', status: 'shipped' },
+      { wedge: 'Push when agent needs human', segment: 'Claude Code / Cursor / OpenClaw users', vulnerability: 'Claude RC broken (#60208, #29726); GitHub mobile has only PR-review push', pain: '"I keep walking back to my laptop at 11pm"', status: 'shipped' },
+      { wedge: 'MCP-over-mobile with founder-owned servers', segment: 'Multi-tool founders w/ Stripe/Linear/Supabase', vulnerability: 'None ship it; Expo/Cursor only support remote MCP for IDE work', pain: 'I want my actual stack callable from my phone', status: 'shipped' },
+      { wedge: 'One identity across .you/.company/.host/.mobile', segment: 'Founders running ≥2 foundr.* products', vulnerability: 'ChatGPT/Claude single-tenant; Notion mobile is web wrapper', pain: 'Stop making me re-auth on each phone app', status: 'shipped' },
+      { wedge: 'Glanceable office (Live Activity / widget)', segment: 'Habitual phone-checkers (i.e. all of them)', vulnerability: 'None of ChatGPT/Claude/Lindy ship Live Activities', pain: 'I open my phone 100×/day, none show my agents', status: 'shipped' },
+      { wedge: 'Shareable quote-tweet voice card', segment: 'Founder-creators (X/IG/TikTok overlap)', vulnerability: 'No competitor offers shareable artifact', pain: 'I want to post the insight I just dictated', status: 'partial', note: 'Depends on tier mix' },
+      { wedge: 'Offline-capable drafts/queue', segment: 'Subway/plane/lab commuters', vulnerability: 'Linear loses data, Notion timeouts, Claude drafts vanish', pain: 'I lost my prompt when I backgrounded the app', status: 'shipped' },
+      { wedge: 'iPad/tablet-first parity', segment: 'Founders who edit on iPad', vulnerability: 'Claude iPad has no Code section at all', pain: 'iPad is invisible to the agent stack', status: 'partial', note: 'Ship Y2' },
+    ],
+    powerUserPain: [
+      {
+        label: 'A',
+        title: 'Long-running agent sessions break silently on mobile and eat user input',
+        quotes: [
+          { text: 'Mobile App Session Breaks After Long Tasks — Message Loss… User\'s typed message disappears completely, cannot be recovered.', attribution: 'StopGamer — anthropics/claude-code#16881' },
+          { text: 'Drafts not persisting on mobile (iOS)… whatever I\'ve typed is silently discarded. When I return, the input is empty.', attribution: 'kdiallo-00 — anthropics/claude-code#53598' },
+          { text: 'Switching to another iOS app and returning to Claude kills the connection. The app still shows the session as "active" but responses stop flowing.', attribution: 'MikeBarta — anthropics/claude-code#29726' },
+        ],
+        whyIncumbentsCantFix: 'Claude/ChatGPT push session state through a central relay optimized for short-form chat. Long agent sessions + iOS background lifecycle + permission prompts cross three teams (mobile, relay, agent runtime) and no one owns the integration test.',
+        coverage: { status: 'shipped', detail: 'foundr.mobile pairs phone↔founder-machine over an end-to-end channel, persists drafts locally per-conversation, treats permission prompts as first-class push payloads.' },
+      },
+      {
+        label: 'B',
+        title: 'Push when the agent needs me — promised, rarely delivered',
+        quotes: [
+          { text: 'Push notifications from Claude Code are not being delivered to linked mobile devices… long-running task in Claude Code, no push notification received.', attribution: 'luckygreen — anthropics/claude-code#60208' },
+          { text: 'I caught myself walking back to my laptop at 11pm for the third time that night, just to check what the OpenClaw agent was doing. So I built the iOS app I kept wishing existed.', attribution: 'Aerostack founder — indiehackers.com/post/openclaw-mobile' },
+          { text: 'Agent Sessions with no PR should show in mobile app… those sessions don\'t show up making it hard for me to be productive on the go.', attribution: 'Power-Maverick — github.com/orgs/community/discussions/190967' },
+        ],
+        whyIncumbentsCantFix: 'Push routing requires owning identity + agent runtime + device token + per-tool semantics. Anthropic/OpenAI/GitHub each own one slice. The OpenClaw clone validates the demand — founders WILL build their own iOS app rather than wait.',
+        coverage: { status: 'shipped', detail: 'Push is a first-class MCP-emitted payload; agent says "I need approval", phone wakes, tap approves from lock screen.' },
+      },
+      {
+        label: 'C',
+        title: 'The "mobile is a web wrapper" tax',
+        quotes: [
+          { text: 'Notion\'s mobile app is fundamentally a web wrapper, leading to performance issues like large initial payloads, heavy client-side processing… on a spotty 4G connection in an elevator, it\'s an eternity.', attribution: 'techresolve.blog 2026/03/09' },
+          { text: '(I work at Notion)… On Android devices the situation is still not usable.', attribution: 'jitl, Notion engineer — HN id=25522104' },
+          { text: 'There\'s no offline support at all [in Linear iOS], unlike the desktop app. If you\'re using Linear Mobile to organize your work during a commute, prepare for a frustrating and painful experience.', attribution: 'karantalati — Linear Mobile App Store review' },
+        ],
+        whyIncumbentsCantFix: 'Notion\'s web wrapper is an architectural decision a decade deep; rewriting native means rewriting block engine, sync engine, plugin runtime. Linear shipped native and STILL lost offline because the sync engine was the hard part.',
+        coverage: { status: 'shipped', detail: 'foundr.mobile is native-first day 0, queues every drop locally, treats offline as the steady state.' },
+      },
+      {
+        label: 'D',
+        title: 'Productivity tools are a sub graveyard with no glanceable surface',
+        quotes: [
+          { text: 'ChatGPT consumes 15-20% battery per hour in background, even when not actively used. Voice Mode Active (WiFi): 18-22%/hour, Device Heat: High.', attribution: 'gowavesapp.com — Why ChatGPT can destroy productivity' },
+          { text: 'For a product as great as Linear, I can\'t believe the mobile app does not display a COUNT of the issues on each view.', attribution: 'Mister Modem — Linear Mobile App Store' },
+          { text: 'Lots of glitches. I archive tickets and they reappear, I reassign tickets to the team they never see them.', attribution: 'Asana mobile user — forum.asana.com/t/952108' },
+        ],
+        whyIncumbentsCantFix: 'None of ChatGPT/Claude/Notion/Asana ship Live Activities or widgets that show meaningful live state — only icons and badge counts. Building a glanceable office requires a domain model with rooms/agents/events; chat apps don\'t have one.',
+        coverage: { status: 'shipped', detail: 'Live Activity surface backed by the founder\'s foundr.world room. Tap = open the world.' },
+      },
+      {
+        label: 'E',
+        title: 'Cannot drive my actual stack from my phone — only the vendor\'s chat',
+        quotes: [
+          { text: 'There\'s absolutely no way to create a pull request [in GitHub mobile]. No button. Changing to the feature branch doesn\'t help either.', attribution: 'mary.codes/blog/programming/why_cant_i_make_a_pr_in_github_mobile' },
+          { text: 'Plug Claude, Hermes, or OpenClaw into a real mobile device to automate any app… Open source · MIT · LLM agnostic.', attribution: 'mobilerun.ai (the fact this exists is the pain)' },
+          { text: 'Cloud-only — No self-hosting option [for Lindy]. Your data lives on Lindy\'s infrastructure, which may concern privacy-focused users.', attribution: 'rywalker.com/research/lindy' },
+        ],
+        whyIncumbentsCantFix: 'GitHub mobile blocks PRs because mobile is treated as a review surface; Lindy refuses self-host because cloud-only is the business model. The MCP-over-mobile pattern is shipping in adjacent communities — but no one wires the founder\'s OWN MCP servers into a unified cockpit.',
+        coverage: { status: 'shipped', detail: 'foundr.mobile ships an MCP client SDK with founder-owned servers (foundr-backlog, supabase, playwright, perea-mcp), each callable by voice or tap.' },
+      },
+    ],
+  },
+
+  'foundr-you': {
+    strategicMoves: [
+      { title: 'Ship the MCP server first, brand second', body: 'Get into Claude Desktop / Cursor / Codex MCP registry within 60 days. This is where memory-mcp, projectmem, agentmemory, mcp-memento are landing — be the most polished one with a real brand.', timing: 'Q1' },
+      { title: 'Quote-tweet onboarding', body: 'Make claiming a profile a public act. Every claim is a tweet. Asymmetric distribution vs Mem0\'s dev-funnel.', timing: 'Q1' },
+      { title: 'Pre-built founder schemas', body: '6 archetypes (Solo SaaS, Solo Agency, AI-native, Solo content, Solo hardware, Solo dev tools). Schema becomes the differentiator no general memory layer can copy without forking.', timing: 'Q2' },
+      { title: 'Audit-log + GDPR-deletion-proof from day one', body: 'Directly counter Mem0/Zep\'s documented governance gaps and OpenAI\'s Nov 2025 mass-deletion trauma. Free certification badge.' },
+      { title: 'First-class "Forget" gestures', body: 'Project-scoped memory walls, explicit-forget, diffable history. Solve the #1 HN/Reddit complaint pattern.' },
+      { title: 'foundr.* ecosystem reads-from contract', body: 'Every other foundr.* product reads from foundr.you by default. Bundle becomes structural moat.' },
+      { title: 'Acquire/partner with one MCP-memory OSS project', body: 'Memento, projectmem, or agentmemory for instant credibility + contributor base.' },
+    ],
+    moats: {
+      hold: [
+        { title: 'Founder-schema vocabulary', body: 'A canonical taxonomy of founder primitives (stack, role, taste, audience) is a brand + content asset that horizontal memory players can\'t ship without a vertical pivot.' },
+        { title: 'foundr.* ecosystem reads-from', body: 'Every other foundr.* product is a captive integration. Cross-product retention compounds.' },
+        { title: 'Public profile graph', body: 'Quote-tweet flywheel produces a public founder graph (think GitHub for founder context). Network effect; data moat over time.' },
+      ],
+      cannotHold: [
+        { title: 'Memory tech', body: 'Mem0, Zep, Letta, Graphiti are all open-source, all better-funded, all benchmarked. We will not out-build them on retrieval quality.' },
+        { title: 'MCP protocol', body: 'Open standard. Any client can switch servers in a config-file edit. No protocol-level lock-in possible.' },
+        { title: 'Storage', body: 'Postgres + pgvector is commodity. Nothing proprietary.' },
+      ],
+      switchingFor: [
+        'Switching TO foundr.you: when a founder hits ChatGPT memory limit (~10K chars), Mem0\'s $249/mo graph paywall, a silent memory deletion on an incumbent, or signs up for a second foundr.* product and gets prefilled context for free',
+      ],
+      switchingAgainst: [
+        'Switching AWAY: when OpenAI/Anthropic ship cross-vendor MCP-readable memory (low odds — incentive misaligned), or a horizontal player (Mem0) ships a founder-vertical SKU after seeing our traction',
+      ],
+    },
+    synthesis: [
+      { wedge: 'Versioned typed facts, not chat-log scraping', segment: 'AI-native founders tired of fuzzy context', vulnerability: 'OpenAI Memory: hidden second layer, no edit/export. Mem0: raw conversation embedded as single vector.', pain: '"I want to see and edit what my agent knows about me"', status: 'shipped' },
+      { wedge: 'MCP-native on free tier', segment: 'Multi-tool founders (Claude + Cursor + ChatGPT)', vulnerability: 'Mem0 $249 for graph; LangSmith $39/seat; ChatGPT memory not MCP-exposed', pain: 'I want every agent reading from one profile, not three silos', status: 'shipped' },
+      { wedge: 'Founder-shaped schema', segment: 'Solo founders who don\'t fit "generic preferences"', vulnerability: 'No incumbent ships a typed schema for stack/repos/projects/taste/wins/kills', pain: '"Remember Dante is solo, ships on Vercel, dislikes lime-green"', status: 'shipped' },
+      { wedge: 'Project-scoped memory + explicit forget', segment: 'Founders worried about personal context leaking into work', vulnerability: 'ChatGPT: "memory cross-pollutes work and personal contexts" (HN 44052246); Simon Willison documented chat-history pollution', pain: 'Hobby project context leaks into pitch deck', status: 'shipped' },
+      { wedge: 'foundr.* ecosystem reads-from contract', segment: 'Founders running multiple foundr.* products', vulnerability: 'No horizontal memory player has a captive ecosystem', pain: 'foundr.world doesn\'t know what I built in foundr.host', status: 'partial' },
+      { wedge: 'Audit log + signed snapshots', segment: 'Founders sharing context with contractors/collaborators', vulnerability: 'No incumbent ships per-agent audit (who read what when)', pain: 'I want to know which agent saw my pricing strategy', status: 'partial' },
+      { wedge: 'Quote-tweet public profile graph', segment: 'Founder-creators wanting share-able profile', vulnerability: 'Mem0/Letta have no consumer surface; ChatGPT memory non-portable', pain: 'No way to publish "what my agents know about me"', status: 'gap' },
+    ],
+    powerUserPain: [
+      {
+        label: 'A',
+        title: '"I re-explain my stack to every new chat"',
+        quotes: [
+          { text: 'Across Claude, Cursor, Codex, Antigravity — agents are stateless between sessions. Each new conversation pays 5,000–20,000 tokens to rebuild context that existed yesterday.', attribution: 'riponcm — dev.to/riponcm/projectmem' },
+          { text: 'AI tools remember now, but they remember in separate silos. Claude has projects, ChatGPT has personalization, Cursor indexes your codebase, and somehow you still end up re-explaining the same decisions, constraints, preferences, and project state every time.', attribution: '_boweii — dev.to/contextfabric' },
+          { text: 'Every time you start a new conversation with an LLM, it forgets everything. No memory of your preferences, your codebase, your past mistakes, or your project context. You end up repeating yourself.', attribution: 'lymy1205 — dev.to/ai-memory-is-broken' },
+        ],
+        whyIncumbentsCantFix: 'Memory tied to vendor walls (ChatGPT memory, Claude Projects, Cursor Rules). Each vendor monetizes lock-in inside their tool — opening cross-vendor MCP-readable memory removes the moat.',
+        coverage: { status: 'shipped', detail: 'foundr.you ships an MCP server every agent reads from. One profile, every tool — Claude / Cursor / ChatGPT all see the same canonical facts.' },
+      },
+      {
+        label: 'B',
+        title: '"ChatGPT silently profiled me and I can\'t see / control it"',
+        quotes: [
+          { text: 'Just yesterday I asked ChatGPT 4o something in a new chat and after answering, it referred to a plan from a multiple weeks old chat that was 100% not in current context. This hit me as being incredibly scary.', attribution: 'HN 40631694' },
+          { text: 'ChatGPT memory seems weird to me. It knows the company I work at and pretty much our entire stack — but when I go to view its stored memories none of that is written anywhere.', attribution: 'HN 45218761' },
+          { text: 'ChatGPT has a memory you cannot see, besides chat history and besides memory. You cannot purge or manage this memory.', attribution: 'HN 44059140' },
+        ],
+        whyIncumbentsCantFix: 'OpenAI/Anthropic monetize stickiness via opaque memory. NYT court order forces OpenAI to retain logs indefinitely → privacy ceiling. Cannot ship an inspectable memory layer without contradicting the moat.',
+        coverage: { status: 'shipped', detail: 'Every fact in foundr.you is typed, visible, editable, version-tracked. Audit log shows which agent read which fact, when.' },
+      },
+      {
+        label: 'C',
+        title: '"Memory cross-pollutes work and personal contexts"',
+        quotes: [
+          { text: 'I\'ve been impressed with the memory feature, but I do see how it could be dangerous, especially if you use it for hobby projects and serious projects. I would not want that context to spill over into a personal project.', attribution: 'HN 44052246' },
+          { text: 'If I\'m debugging something with ChatGPT and I hit an error loop, my fix is to start a new conversation. Now I can\'t be sure ChatGPT won\'t include notes from that previous conversation\'s context that I was trying to get rid of!', attribution: 'Simon Willison — HN 44428446' },
+          { text: 'I\'d love a version of this that was tied to projects — then I could maintain way more control over my context without worrying that weird stupid stuff was leaking into my real work.', attribution: 'HN 43886594' },
+        ],
+        whyIncumbentsCantFix: 'OpenAI per-project memory is "a huge miss right now… global behavior so far is some architectural limitation" (HN 44052246). Project scoping requires rebuilding the memory architecture, which contradicts their stickiness funnel.',
+        coverage: { status: 'shipped', detail: 'Project-scoped memory walls + explicit forget gestures. Each project namespace is isolated; founders explicitly cross-link if they want.' },
+      },
+      {
+        label: 'D',
+        title: '"Memory infrastructure silently breaks and I lose data"',
+        quotes: [
+          { text: 'When calling memory.add(), the library concatenates the full raw conversation into a single string … If the conversation exceeds the embedding model\'s token limit, the call fails with a 400 Bad Request before any memory is extracted or stored.', attribution: 'Mem0 Issue #5148' },
+          { text: 'When the LLM returns an action.id that doesn\'t exist in the internal tempUuidMapping, the resolved realMemoryId becomes undefined. This causes updateMemory(undefined, ...) or deleteMemory(undefined) to throw, and the memory operation is silently dropped — resulting in data loss.', attribution: 'Mem0 Issue #4708' },
+          { text: 'Graph memory search returns empty results when filtering by user_id with Neo4j backend … This breaks the core multi-user capability.', attribution: 'Mem0 Issue #4232' },
+        ],
+        whyIncumbentsCantFix: 'Mem0 and Letta have dual revenue pressure (raise + ship) and treat memory as agent-infra not user-data. Silent failures are documented in their own issue trackers but unprioritized vs new-customer wins.',
+        coverage: { status: 'gap', detail: 'foundr.you ships explicit failure modes: write returns success/fail with reason; version diff before commit; daily corpus integrity check. Status: needs to ship before paid tier launches.' },
+      },
+      {
+        label: 'E',
+        title: '"Memory full / lost mid-project, no recovery, no portability"',
+        quotes: [
+          { text: 'If you\'re a ChatGPT power user, you may have recently encountered the dreaded "Memory is full" screen. Seeing a memory full warning in the middle of a time-sensitive project can be extremely frustrating.', attribution: 'Unite.AI — ChatGPT\'s memory limit' },
+          { text: 'My ChatGPT was writing a recipe to memory, and after it was done, the entire "saved memory" panel was blank, with no history at all. Everything is just gone.', attribution: 'Reddit user — via aquartia.in 2025-11-14' },
+          { text: 'The minute you switch to Claude for a long-context summary, or Gemini for a Google Workspace task, the past month of carefully training your assistant evaporates the moment you change tabs.', attribution: 'rethread.dev/blog/why-chatgpt-forgets' },
+        ],
+        whyIncumbentsCantFix: 'Each vendor optimizes for memory inside their tool. Cross-vendor portability would destroy the moat. ChatGPT\'s Nov 2025 mass deletion event went un-acknowledged for days.',
+        coverage: { status: 'shipped', detail: 'Full JSON + markdown export anytime. Encrypted backups on Pro. Signed canonical-profile snapshots for sharing read-only with collaborators.' },
+      },
+    ],
+  },
+
+  'foundr-bio': {
+    strategicMoves: [
+      { title: 'Ship the MCP server first, web UI second', body: 'Distribution wedge inside Claude Desktop, Cursor, ChatGPT custom GPTs. The web UI is a marketing surface; the MCP is the product.', timing: 'Q1' },
+      { title: 'Index PubMed daily + bioRxiv weekly + clinicaltrials.gov hourly for the 50 longevity topics that have demand', body: 'Rapamycin, fisetin, GLP-1, NAD precursors, senolytics, peptide cocktails. Skip the long tail.', timing: 'Q1' },
+      { title: 'Launch the free /quote tier', body: 'Share-card image with citation chain, optimized for X virality (Consensus\'s playbook).', timing: 'Q2' },
+      { title: 'Partner-integrate with 2 longevity telehealth clinics', body: 'AgelessRx, Healthspan, Lin Health as a referral data source — they have the prescribing wedge.', timing: 'Q2' },
+      { title: 'Build the podcast-transcript index', body: 'Huberman, Attia, FMF, Bryan Johnson — every show citation becomes a foundr.bio deep-link, instant SEO juice.', timing: 'Q3' },
+      { title: 'Cohort-launch in AI-native-founder Discord cluster', body: 'NewLimit\'s open-source orbit, Sam Altman / Retro circle, Hugging Face bio channels — before the broader biohacker market.', timing: 'Q3' },
+      { title: 'Weekly bio-brief newsletter at 5K subs', body: 'Free top-of-funnel + cited-snippet generator for Pro upsell.', timing: 'Q4' },
+    ],
+    moats: {
+      hold: [
+        { title: 'MCP-native distribution inside agent IDEs', body: 'First-mover before Elicit/Consensus ship MCP. Once a founder\'s agent has the namespace, switching means re-prompting every agent.' },
+        { title: 'Curated longevity-specific corpus', body: 'clinicaltrials.gov + bioRxiv + podcast transcripts + protocol forums all in one queryable namespace. Generic research tools (Elicit/Consensus) don\'t want to manage the vertical taxonomy.' },
+        { title: 'Editorial stance', body: 'Willingness to surface dosing protocols with evidence grades that Elicit/Consensus refuse to. Examine.com proves the trust moat but doesn\'t scale to AI-native.' },
+      ],
+      cannotHold: [
+        { title: '"Better AI synthesis"', body: 'Consensus/Elicit have years of head start on retrieval + summarization quality.' },
+        { title: '"Larger index"', body: 'PubMed/bioRxiv/clinicaltrials are public; anyone can index them.' },
+        { title: 'Network effects from user queries', body: 'Search-style products have weak network effects until they\'re at Google scale.' },
+      ],
+      switchingFor: [
+        'Saved protocols + query bundles in user account = sticky once the user has 5+ tracked topics',
+        'API/MCP key in Claude/Cursor config = forgotten infrastructure, hard to dislodge',
+        'Personalized "what\'s new in your topics" digest = email habit moat (FMF/Levels playbook)',
+      ],
+      switchingAgainst: [
+        'Elicit or Consensus ships MCP — closes our distribution wedge',
+        'A longevity-vertical fork of Consensus targets the same audience',
+        'Examine.com retools toward agent-native delivery (unlikely culturally)',
+      ],
+    },
+    synthesis: [
+      { wedge: 'MCP-native distribution', segment: 'AI-native founders + biohackers in Claude/Cursor', vulnerability: 'Elicit/Examine require context-switch to website; Consensus MCP shallow', pain: 'I want to ask longevity questions from my IDE without a tab change', status: 'shipped' },
+      { wedge: 'Vertical longevity opinion', segment: 'Indie biohackers tired of "consult your doctor" hedging', vulnerability: 'Elicit/Consensus claim-hedge; Examine doesn\'t cover rapamycin/senolytics', pain: '"Just tell me the dose people actually use"', status: 'shipped' },
+      { wedge: 'Protocol-graded output', segment: 'n-of-1 self-experimenters', vulnerability: 'No incumbent outputs Mayo-style protocol skeletons with evidence grades', pain: 'I have to read 20 papers to assemble a dosing protocol', status: 'shipped' },
+      { wedge: 'Free quote-tweet tier (share-card)', segment: 'Founder-creators with bio interest', vulnerability: 'Elicit/Examine have no viral share surface', pain: 'No way to share what I learned on X', status: 'partial' },
+      { wedge: 'Topic threads that walk-the-literature daily', segment: 'Researchers tracking 3-5 active topics', vulnerability: 'Elicit answers one question; Litmaps Monitor is map-shaped not synthesis-shaped', pain: 'I want a daily digest, not a search bar', status: 'shipped' },
+      { wedge: 'Replication-aware ranker', segment: 'Burned-by-hype biohackers', vulnerability: 'No incumbent surfaces contradictions inline', pain: '"This paper says one thing, the next says the opposite"', status: 'partial' },
+      { wedge: 'n-of-1 protocol journal linked to literature', segment: 'Founders running personal protocols', vulnerability: 'Examine doesn\'t track personal use; foundr.you cross-product unique', pain: 'I tried rapamycin for 90 days and have no record of what happened', status: 'partial' },
+      { wedge: 'Podcast-transcript index', segment: 'Huberman/Attia/FMF listeners', vulnerability: 'No search engine indexes podcast transcripts as a primary source', pain: '"What did Attia say about NAD on episode 247?"', status: 'gap' },
+    ],
+    powerUserPain: [
+      {
+        label: 'A',
+        title: 'PubMed is overwhelming and missing the "tolerance / real-world dose" answer',
+        quotes: [
+          { text: 'A Google search for "modafinil tolerance" produces many dozens of blog posts, forum comments etc., of people reporting building tolerance. However, searches of PubMed or Google Scholar do not produce any substantive results.', attribution: 'r/Nootropics — archived gwern.net' },
+          { text: 'Within any scientific field of sufficient intellectual depth to deserve the name, there is far too much happening in the literature for any individual to absorb, digest and assimilate it all without making that task their full-time job.', attribution: 'Ouroboros aging blog — pmc.ncbi.nlm.nih.gov/PMC2650186' },
+          { text: 'Researchers report up to 80% time savings using Elicit for systematic reviews.', attribution: 'elicit.com — implication: pre-Elicit pain was a full week per review' },
+        ],
+        whyIncumbentsCantFix: 'PubMed is keyword-only and doesn\'t index forums; Elicit/Consensus surface papers but not real-world dose conversations. Examine doesn\'t cover longevity-novel molecules. The gap is structural across information silos.',
+        coverage: { status: 'shipped', detail: 'foundr.bio crosses PubMed + bioRxiv + clinicaltrials + r/longevity + LongeCity + protocols.io in one queryable namespace.' },
+      },
+      {
+        label: 'B',
+        title: 'Conflicting protocols for the same molecule, no synthesis layer',
+        quotes: [
+          { text: 'I\'m so confused. I am seeing in many places folks are talking about daily use of fisetin in the 400mg-800mg range, but everything I read here talks about using the 2 day protocol. So what\'s the story?', attribution: 'JimWoodall — LongeCity Senolytics forum' },
+          { text: 'The Information Overload: You spend hours trying to decide between NMN and NR. One expert swears by NMN, another presents data favoring NR. You fall down a rabbit hole leaving you more confused.', attribution: 'Staqc blog summarizing r/longevity NAD-precursor confusion' },
+          { text: 'Sublingual drops, IV drips, nasal sprays, oral capsules, injections. Everyone\'s claiming a different delivery method is the best. Some people swear an IV infusion left them feeling like they were 30 again. Others took NMN for six months and felt nothing.', attribution: 'Healthspan — gethealthspan.com NAD article' },
+        ],
+        whyIncumbentsCantFix: 'Elicit/Consensus refuse to synthesize directional protocols (medical-claim hedging). Examine doesn\'t cover novel molecules. The synthesis is a brand stance most academic-coded tools won\'t take.',
+        coverage: { status: 'shipped', detail: 'Protocol-graded output: "Mayo fisetin 20 mg/kg day 1 + day 30" with evidence grade and the 4 alternative protocols ranked.' },
+      },
+      {
+        label: 'C',
+        title: 'Where-to-buy / dose-finding info scattered across rapamycin.news forums, never aggregated',
+        quotes: [
+          { text: 'Currently looking at buying rapamycin online, likely via India, and I see there are a number of brands, including: Biocon (Rapacan), Zydus Cadila (Siromus), Rocas, Panacea Biotec (Siropan), Actiza, Pfizer (Rapamune).', attribution: 'Age-Reversal Forum — forum.age-reversal.net' },
+          { text: 'Latest Biocon Rapamycin / Rapacan / Sirolimus quote through Jagdish (NIBA Health) is $7 USD for 10 mg.', attribution: 'rapamycin.news pricing wiki' },
+          { text: 'The price range for rapamycin is genuinely confusing. One pharmacy might quote you $1,270 for a month\'s supply. Another might say $80. A telehealth clinic might charge $290.', attribution: 'WinAging — winaging.com/blog/rapamycin-cost' },
+        ],
+        whyIncumbentsCantFix: 'Elicit/Consensus don\'t index forums or pharmacy quotes. Examine doesn\'t cover sourcing. The "where to actually buy" question lives in scattered forum wikis with no agentic interface.',
+        coverage: { status: 'partial', detail: 'foundr.bio indexes rapamycin.news + Age-Reversal Forum + LongeCity for sourcing + dose data. Roadmap: pharmacy-quote scraping for transparency.' },
+      },
+      {
+        label: 'D',
+        title: 'Senolytics — even experts say the field is contradictory and "stack at your own risk"',
+        quotes: [
+          { text: 'It\'s hard to imagine that anyone would build up a significant number of senolytic cells in 3 weeks. Cellular senescence doesn\'t work that way. The answer to this riddle is that fisetin is not just a senolytic but also senomorphic.', attribution: 'LongeCity user reasoning through conflicting claims' },
+          { text: 'At this point in senolytic research, it would be unwise (IMO) to "stack" various substances which have not even been through human trials. You are more likely to do serious damage than help yourself.', attribution: 'LongeCity — longecity.org/forum/topic/103978' },
+          { text: 'Significant challenges remain, including the lack of standardized biomarkers, the heterogeneity of senescent cell populations, and questions about safety and long-term efficacy. Some experts go as far as questioning the senescence paradigm itself.', attribution: 'Steve H — LongeCity expert roundup 2026' },
+        ],
+        whyIncumbentsCantFix: 'Elicit/Consensus won\'t make the call. Examine doesn\'t cover senolytics. The "is this paradigm even real" question requires editorial stance most tools avoid.',
+        coverage: { status: 'shipped', detail: 'Replication-aware ranker surfaces contradictions + retraction watch + sample-size warnings inline. Editorial stance baked into ranker tuning.' },
+      },
+      {
+        label: 'E',
+        title: 'Industry-sponsored / hyped studies are missing or hidden — biohackers feel actively misled',
+        quotes: [
+          { text: 'Checking right now… Pubmed still records no human trials [for magnesium l-threonate]; a search turns up 3 studies — 2 mice studies and 1 editorial. Between the total absence of publications and the steady deletion of details from their science page, it doesn\'t look like the USC or CRO studies will be published anytime soon.', attribution: 'r/Nootropics — archived gwern.net' },
+          { text: 'The theory took off and "outpaced the actual data," Dr Kaeberlein said. [on NAD+ blood-level decline being a 20-year-old assumption that didn\'t hold up in 2026]', attribution: 'Straits Times reporting on May 2026 Nature Metabolism paper' },
+          { text: 'Nootropics communities like to wave these details away because they like positive results. This leads to an all too common scenario on nootropics forums where someone suffers from depression for months or years before realizing that their supplement stack containing cholinergic substances is making it worse.', attribution: 'HN id=47112719' },
+        ],
+        whyIncumbentsCantFix: 'Examine.com\'s human-curation is slow. Elicit/Consensus don\'t flag missing studies or industry-sponsorship bias. The "what\'s missing from the literature" question is meta and requires editorial judgment.',
+        coverage: { status: 'partial', detail: 'foundr.bio surfaces "no human trials" flags + industry-sponsorship metadata + retraction watch. Editorial stance: side with skeptics, link the contrarian evidence prominently.' },
+      },
+    ],
+  },
+
+  'foundr-lifestyle': {
+    strategicMoves: [
+      { title: 'Ship the ACP/MCP product feed before the website', body: 'Be the first apparel brand on Anthropic\'s tool registry. When ChatGPT Instant Checkout / Stripe ACP hit critical mass, brands without agent feeds become invisible.', timing: 'Q1' },
+      { title: 'Drop 1 = 200 units of a single hero piece', body: 'Heavyweight t-shirt, $85. Limit to existing Founder World users for 48h, then open. Prove sell-through, prove the agent-buy flow.', timing: 'Q1' },
+      { title: 'Wire foundr.you taste profile to push a Slack/DM 24h before public drop', body: 'Pro tier autobuys. The agent-watches-the-drop primitive is the entire pitch.', timing: 'Q2' },
+      { title: 'Provenance: signed card + on-chain record per garment', body: 'Use existing perea infra; no new chain. Each piece links back to its agent designer or human curator.', timing: 'Q2' },
+      { title: 'Cap drops at 8–12/year', body: 'Don\'t compete with Supreme\'s weekly cadence — compete with ALD\'s restraint. The audience is exhausted by drop calendars.' },
+      { title: 'Pro tier bundled at foundr.you Pro upgrade for 50% off year one', body: 'Drives attach across the ecosystem.', timing: 'Q3' },
+      { title: 'Sign one co-drop with a respected operator', body: 'Levels.io, Marc Lou, a founder with an X audience >100K. Borrow tribe within 6 months.', timing: 'Q3' },
+    ],
+    moats: {
+      hold: [
+        { title: 'foundr.you taste graph + agent integration', body: 'Proprietary data nobody else has. Once a founder has 6+ months of style data, switching to a stylist like Astrid/Styl10 means re-onboarding.' },
+        { title: 'Founder World audience as captive distribution channel', body: 'Zero-CAC compound. Lifestyle is the first foundr.* product where the customer base is captive.' },
+        { title: 'ACP-first technical integration', body: '12–24 month lead over incumbents who still think of agents as a threat. Stripe ACP / Anthropic Tool Registry are the new picks-and-shovels.' },
+      ],
+      cannotHold: [
+        { title: 'Fabric / silhouette / Pyca-like technical claims', body: 'Commodifiable in 1 season. Aelfric Eden can copy a Cuts fabric in 90 days.' },
+        { title: 'Visual aesthetic alone', body: 'Copyable. Aelfric Eden copies ALD\'s aesthetic in 90 days; Buck Mason copies anything anyone ships.' },
+        { title: 'Founder cult of personality', body: 'Pieter Levels proves the ceiling — single-persona brand caps at low-six-figures because brand IS Pieter.' },
+      ],
+      switchingFor: [
+        'Taste profile lock-in — once foundr.you has 6+ months of style data, switching to Astrid/Styl10 means re-onboarding',
+        'Provenance per piece creates a soft collection effect — you want the matching numbered piece from drop 3',
+        'foundr.world credits stack only against foundr.lifestyle drops — credits-as-soft-loyalty',
+      ],
+      switchingAgainst: [
+        'The garments themselves are physical and don\'t lock in — a competing brand with better fits wins',
+        'Apparel resale market (StockX, Grailed) is liquid — pieces leave the ecosystem easily',
+        'A horizontal AI-shopping agent (OpenAI Operator, Anthropic Tool) could in theory cross all brands',
+      ],
+    },
+    synthesis: [
+      { wedge: 'Agent-watches-the-drop + flags', segment: 'Founders exhausted by Supreme/ALD drop calendars', vulnerability: 'ALD/Supreme have no agent feed, no taste-profile binding', pain: '"I miss every drop because I\'m shipping at 11am Thursday"', status: 'shipped' },
+      { wedge: 'MCP checkout with autobuy cap', segment: 'Founders who want to delegate shopping but cap the spend', vulnerability: 'No apparel brand exposes ACP-compliant checkout yet', pain: 'I want my agent to grab a size M tee under $80 without asking', status: 'partial' },
+      { wedge: 'foundr.you taste profile binding', segment: 'Multi-product foundr.* users', vulnerability: 'No competitor has access to the founder\'s sizing + palette + brand-trust graph', pain: '"Every site asks me my size from scratch"', status: 'partial' },
+      { wedge: 'Provenance per piece (NFC + signed record)', segment: 'Quiet-luxury + craft-signaling buyers', vulnerability: 'Only LV/Hermès do this; nobody does it in $40-$140 tier', pain: '"How do I know this was actually limited?"', status: 'partial' },
+      { wedge: 'foundr.world credits cross-redemption', segment: 'Multi-product foundr.* users earning credits', vulnerability: 'No apparel brand has a sibling-product credit economy', pain: '"What can I spend foundr.world credits on?"', status: 'partial' },
+      { wedge: 'Limited drops (no SKU sprawl)', segment: 'Buyers tired of True Classic-style infinite catalog', vulnerability: 'Cuts/True Classic optimize for always-in-stock — opposite shape', pain: '"Too many SKUs, I can\'t pick"', status: 'shipped' },
+      { wedge: 'AI-native founder aesthetic', segment: 'Quiet-luxury × e/acc tribe', vulnerability: 'ALD reads Brooklyn-creative; Cuts reads gym-bro; Levels.io reads e/acc-only', pain: '"None of them speak to me as a builder who also wants taste"', status: 'shipped' },
+      { wedge: 'Quote-tweet drop calendar', segment: 'X-native founder-creators', vulnerability: 'No competitor has a viral free-tier with social-graph attribution', pain: 'Drop calendars require Discord membership; I\'m on X', status: 'shipped' },
+    ],
+    powerUserPain: [
+      {
+        label: 'A',
+        title: 'Drop fatigue and restock burnout',
+        quotes: [
+          { text: 'Fatigue has fully settled in, and people are shopping at places they don\'t fully trust. With every brand coordinating drops, people are suffocated by constant newness.', attribution: 'Gavôn Owen — righthype.substack.com/p/the-post-hype-economy' },
+          { text: 'It is the physical, mental, and emotional exhaustion that comes from sustained, high-intensity engagement with restocking activities. Waking up for early-morning drops and losing sleep. Feeling anxious about missing restocks during work, meals, or social events.', attribution: 'restock.blog/blog/restock-burnout-guide' },
+          { text: 'FOMO-fatigue. Community sentiment, particularly within Reddit, indicates a growing skepticism. The audience is sophisticated; they recognize that when everything is special, nothing is.', attribution: 'fazbuy.com/blogs/news/the-end-of-brand-mythology' },
+        ],
+        whyIncumbentsCantFix: 'Supreme/ALD/Eric Emanuel\'s entire model is the drop calendar. Removing the FOMO mechanic removes the resale-economy halo. Cannot reposition without breaking the brand.',
+        coverage: { status: 'shipped', detail: 'Agent watches the drop calendar for you. You literally cannot miss a piece you\'d like. Position as the anti-FOMO drop brand.' },
+      },
+      {
+        label: 'B',
+        title: 'Bots and resale ruin the actual drop',
+        quotes: [
+          { text: 'Bots have become a nuisance in the release of just about any hyped product that can be resold at a markup. Nike has said they can account for as much as 50 percent of raffle entries for some releases on its SNKRS app.', attribution: 'BoF — businessoffashion.com/articles/technology/how-brands-are-beating-bots' },
+          { text: 'Hope no one buys this. Several users also reported website slowdowns and crashes during the launch period due to the overwhelming demand. Sold-out CKJK items being listed on resale platforms at significantly higher prices.', attribution: 'Sportskeeda — Jungkook x Calvin Klein review' },
+          { text: 'It looks like people got crazy to get a Royal Pop to make money through resale, not because they are fans. People want money. Royal Pop is not like a cool product, but a way to make easy money.', attribution: 'Prof. Pierre-Yves Donze — cebudailynews.inquirer.net' },
+        ],
+        whyIncumbentsCantFix: 'Bots are an arms race; every CAPTCHA spawns a counter-bot. Real founder-aesthetic buyers lose to scalpers. Brand cannot solve without verified-buyer identity.',
+        coverage: { status: 'shipped', detail: 'foundr.you verified identity required for checkout. Bots cannot replicate a real founder profile. Resale is allowed but provenance chip travels with the garment.' },
+      },
+      {
+        label: 'C',
+        title: 'Quality and customer-service collapse at hyped DTC brands',
+        quotes: [
+          { text: 'Above the Clouds. 71% of Trustpilot reviews are 1-star, with widespread reports of ignored emails, refused returns, and extreme refund delays. The jacket uses a cheap, unbranded plastic zipper instead of an industry-standard YKK®.', attribution: 'couponsscout.com/reviews/above-the-clouds-review-verdict' },
+          { text: 'I returned my items for a refund and they will not process my refund.', attribution: 'BBB complaint on Aelfric Eden — bbb.org' },
+          { text: 'On Trustpilot, the company averages a low rating, with hundreds of 1-star reviews citing delayed shipping, wrong orders, and unresponsive support.', attribution: 'Rockstar Original review — firmsuggest.com' },
+        ],
+        whyIncumbentsCantFix: 'High-margin DTC brands optimize for top-line; service is a cost center. Hyped drop brands compound this — every drop ships fast, returns process slow.',
+        coverage: { status: 'shipped', detail: 'Made-to-last fabrics with named factories (Portugal / USA). YKK zippers as a hard requirement. 30-day exchange-for-size on every piece. Customer service handled by the founder for the first 1000 customers.' },
+      },
+      {
+        label: 'D',
+        title: 'Founder decision fatigue around getting dressed',
+        quotes: [
+          { text: 'You can\'t wear the same gray t-shirt to a pitch meeting at Andreessen Horowitz, a coworking session in Brooklyn, and a networking dinner at a rooftop bar in March.', attribution: 'Grey Journal — greyjournal.net/style/spring-capsule-wardrobe-2026-founder-guide' },
+          { text: 'Navigating the complex maze of entrepreneurship, I was grappling with decision fatigue – that relentless fog where every choice feels like a hurdle. To clear my mind I made a decisive move to eliminate one decision – what to wear.', attribution: 'thedailydrip.com/post/how-a-capsule-wardrobe-relieved-decision-fatigue' },
+          { text: 'I really want to clear my life to make it so that I have to make as few decisions as possible about anything except how to best serve this community.', attribution: 'Mark Zuckerberg — cnn.com/2012/10/03/tech/social-media/zuckerberg-today-show' },
+        ],
+        whyIncumbentsCantFix: 'Capsule-wardrobe brands (Buck Mason, Uniform) solve at SKU-sprawl level. Agentic stylists (Astrid, Styl10) solve at horizontal level. Nobody solves at the AI-native-founder-aesthetic intersection.',
+        coverage: { status: 'shipped', detail: 'foundr.you taste profile + foundr.lifestyle drop watcher = personalized capsule wardrobe assembled by your agent. Limited runs mean no analysis paralysis.' },
+      },
+      {
+        label: 'E',
+        title: 'Online apparel discovery is fundamentally broken',
+        quotes: [
+          { text: 'Shopping isn\'t the problem — wearing what you bought is. The 7:30 am decision is already made.', attribution: 'Styl10 landing — styl10.ai/ai-stylist-for-women' },
+          { text: 'All the research, none of the rabbit holes. Astrid eliminates the tedious stuff—filtering through thousands of options, checking sizing across brands, opening seventeen browser tabs.', attribution: 'astrid.style' },
+          { text: 'r/malefashionadvice drew 498 million views over the past year, up 175 per cent year-over-year. They\'re advice communities for people who don\'t really know where to start.', attribution: 'Vogue — vogue.com/article/men-are-using-reddit-to-shop' },
+        ],
+        whyIncumbentsCantFix: 'Generic AI stylists (Astrid, Styl10) work across all brands but don\'t make brand decisions. Apparel brands themselves don\'t expose agent feeds. The wedge requires both halves.',
+        coverage: { status: 'shipped', detail: 'foundr.lifestyle is both the brand (limited drops, founder aesthetic) AND the agent surface (ACP feed, taste-match, autobuy cap). One vendor, both halves.' },
+      },
+    ],
+  },
 }

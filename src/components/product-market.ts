@@ -1183,10 +1183,332 @@ const baseMarketBySlug: Record<string, MarketInsight> = {
       'Fork primitive as defensible moat. A fork carries lineage (parent experiment + sponsor history). Compounds into a graph no incumbent has — Kickstarter projects can\'t fork, Patreon tiers can\'t fork, GitHub forks have no funding lineage.',
     ],
   },
-}
 
-// ── Merge in the 4 strategic sections (strategic moves / moats / synthesis /
-//    power-user pain) from product-market-extensions.ts ──────────────────────
+  'foundr-mobile': {
+    tam: {
+      headline: '$156B / yr (global mobile-app consumer spend, 2025)',
+      proxy: 'All mobile-app store consumer spending (IAP + subs + paid apps) across iOS + Google Play — the addressable wallet for any phone-resident software a founder would pay for.',
+      calc: 'Appfigures 2025: $155.8B global app spend, +21.6% YoY. Apple ecosystem report: $131B digital goods + $1.0T physical facilitated. Productivity apps specifically: $11.96B (2025) → $18.09B (2030) at 10% CAGR — mobile is the fastest-growing platform (Mordor).',
+      sources: [
+        s('TechCrunch — App spend nearly $156B', 'https://techcrunch.com/2026/01/14/app-downloads-declined-again-in-2025-but-consumer-spending-soared-to-nearly-156b/'),
+        s('Apple Global Ecosystem Report', 'https://www.apple.com/newsroom/pdfs/2024-Apple-Global-Ecosystem-Report-June2025.pdf'),
+        s('Mordor — Productivity Apps', 'https://www.mordorintelligence.com/industry-reports/productivity-apps-market'),
+      ],
+    },
+    sam: {
+      headline: '~$8.5B / yr by 2028',
+      proxy: 'AI-native solo founders + small-team operators worldwide who already pay for a productivity or AI-assistant subscription on mobile and would adopt a unified mobile client for the agentic stack.',
+      calc: 'ChatGPT alone: ~$3B cumulative + $338M/month exit-rate Dec 2025; ~10–12M paying mobile subs at $20 avg (Appfigures). Claude mobile $76M/month April 2026. Personal AI assistant market: $3.4B (2025) → $19.6B (2030) at 41.9% CAGR (TBRC). Apply 30–40% capture-window for founder-segment ARPU lift ($25–$50/mo) on a 17M-strong AI-native solo cohort = ~$8.5B/yr by 2028.',
+      sources: [
+        s('Appfigures — ChatGPT $3B', 'https://appfigures.com/resources/insights/chatgpt-hits-3b-consumer-spend/amp'),
+        s('Appfigures — Claude mobile growth', 'https://appfigures.com/resources/insights/claude-super-bowl-mobile-growth'),
+        s('TBRC — Personal AI Assistant', 'https://www.thebusinessresearchcompany.com/report/personal-artificial-intelligence-ai-assistant-market-report'),
+      ],
+    },
+    som: {
+      headline: '$60–$120M ARR by 2030',
+      proxy: 'Capture 0.5–1.0% of SAM by Y5 = 100K–250K paying mobile seats. Blended ARPU ~$22–$28/mo across Free / Solo $12 / Pro $30.',
+      assumptions: [
+        '200K paid × $22 × 12 = $52.8M floor',
+        'Pro mix at 35% lifts blended ARPU to ~$28 → $84M midpoint',
+        'foundr.* ecosystem cross-sell (foundr.world, foundr.host, foundr.you) compounds LTV ~1.8×',
+      ],
+      analog: 'Granola: $0 → ~$30M ARR / $1.5B valuation in 30 months serving one job (no-bot notes) to founder-class operators. Claude mobile: $11M → $76M monthly consumer spend in <12 months at $4.06 ARPDU. Linear Mobile shipped native and hit 4.8/4.9 + hundreds of thousands of seats inside 12 months.',
+      sources: [
+        s('YipitData — Granola', 'https://www.yipitdata.com/resources/blog/granola-vs-fathom-otter-fireflies-ai-notetaking'),
+        s('Appfigures — ChatGPT AI Chatbot Revenue', 'https://appfigures.com/resources/insights/chatgpt-ai-chatbot-revenue-rivals'),
+        s('Linear — Mobile Launch', 'https://linear.app/changelog/2024-09-19-introducing-linear-mobile'),
+      ],
+    },
+    incumbents: [
+      {
+        name: 'ChatGPT iOS / Android',
+        position: 'Default mobile AI client; #1 download globally 2025 (217M iOS installs); ~$3B cumulative consumer spend',
+        url: 'https://apps.apple.com/us/app/chatgpt/id6448311069',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Mobile chat is a single-tenant surface — no MCP support, no first-class agent push, no developer surface. Voice mode capped at 1 hour/day even on paid tiers. Background drain: 15–22% battery/hour (3× web).' },
+          { kind: 'Business model misalignment', detail: '$20/mo consumer sub optimizes for casual long-tail usage + model selector — not for an agent-orchestrator who wants push from external tools (Stripe, Gmail, Linear) into the chat.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Apple takes 30% — ChatGPT pays ~$675M App Store rake against ~$3B GMV. Cannot offer founder-side OAuth bearers or self-hosted MCP without bypassing Apple\'s IAP perimeter.' },
+          { kind: 'Cultural / incentive trap', detail: 'OpenAI racing toward AGI/consumer scale. 132% YoY uninstall rate spike April 2026 — leadership in growth-defense mode, not segment-deepening.' },
+        ],
+      },
+      {
+        name: 'Claude iOS / Android',
+        position: 'Closest analog to ecosystem-client; $76M monthly consumer spend April 2026',
+        url: 'https://apps.apple.com/us/app/claude-by-anthropic/id6473753684',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Remote-Control connection drops on backgrounding and never auto-reconnects (Issue #29726). /mobile QR deep links broken (#31263). Push notifications "when Claude decides" silently never arrive (#60208). Drafts vanish when app backgrounded (#53598). Long-task sessions stuck and lose user input (#16881).' },
+          { kind: 'Business model misalignment', detail: 'Anthropic\'s revenue is API + Pro/Max subs; mobile is a brand/loyalty surface, not a P&L. Claude mobile generated $76M vs ChatGPT $301M April 2026 — ships mobile features at API-team cadence, not iOS-team cadence.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Same 30% Apple toll. iPad has no Claude Code section at all. Single tenant — no first-class multi-machine pairing.' },
+          { kind: 'Cultural / incentive trap', detail: 'Research-first, model-shipping-first culture. Mobile UX bugs go months without triage (drafts issue closed with "doesn\'t appear to be about Claude Code"). Will not out-iterate a mobile-native team on mobile-native problems.' },
+        ],
+      },
+      {
+        name: 'Lindy iOS (iMessage + SMS)',
+        position: 'iMessage-first AI exec assistant; 400K users; $50/mo Plus',
+        url: 'https://docs.lindy.ai/features/imessage-sms',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'iMessage-first means no rich glanceable state (no live agent canvas, no inline approval cards, no multi-machine view). 3.7/5 App Store rating; reports of credits burning in seconds.' },
+          { kind: 'Business model misalignment', detail: '$49.99/mo Plus priced for "AI employee replacing 5 hires" — not solo founders running their own loops. SMS-as-UI becomes a ceiling: cannot give a thread the affordances of a real app.' },
+          { kind: 'Regulatory / channel dependency', detail: 'iMessage is closed Apple infrastructure; international SMS fees + delivery issues break UX outside US/iOS. Lindy doesn\'t own the channel.' },
+          { kind: 'Cultural / incentive trap', detail: 'Bet the company on text-as-UI. Reversing into native UX invalidates 400K user GTM story; reversing into multi-platform requires inventing primitives they have no muscle for.' },
+        ],
+      },
+    ],
+    winThesis: [
+      'One identity, every product — foundr.you carries Clerk + permissions across foundr.company/.host/.mobile so the phone becomes the cockpit, not the satellite. No competitor\'s mobile client federates an ecosystem.',
+      'MCP-over-mobile, native — bring the same MCP tool surface the desktop agent has, with on-device tool approval. Claude\'s Remote Control is proof this is wanted; their bug list is proof no one ships it.',
+      'Voice-drop as the killer atom — single-tap "drop to backlog" with on-device Whisper, indistinguishable from texting yourself. Granola\'s $1.5B valuation validates voice-first as category.',
+      'Push as first-class agent primitive — not "task done" but "agent is asking; tap to approve from lock screen." Aerostack + OpenClaw mobile clones prove demand; no incumbent ships it cleanly.',
+      'Glanceable office — render the founder\'s foundr.world room as a Live Activity / widget. Opening the phone IS opening the world. Competitors have no surface for it.',
+      'Free quote-tweet tier as viral atom — every voice-drop optionally turns into a quote-shareable card. Wedges install through the founder\'s social graph, not paid Apple Search Ads.',
+    ],
+  },
+
+  'foundr-you': {
+    tam: {
+      headline: '~$28B / yr by 2028',
+      proxy: 'Three converging spend buckets: (1) AI Personal Knowledge Base software, (2) AI-Driven Personal CRM, (3) AI-agent memory infrastructure.',
+      calc: 'AI Personal Knowledge Base: $1.65B (2025) → $4.74B (2029) at 30.1% CAGR (Research and Markets). AI-Driven Personal CRM: $3.8B (2025) → $18.6B (2034) at 19.3% CAGR (Dataintelo). Second Brain Tools: $3.7B (2024) → $15.3B (2033) at 16.2% CAGR (Growth Market Reports). Sum of overlap-adjusted buckets ≈ $9B (2025) → $28B (2028).',
+      sources: [
+        s('Research and Markets — AI PKB', 'https://www.globenewswire.com/news-release/2026/01/29/3228466/28124/en/Artificial-Intelligence-AI-Personal-Knowledge-Base-Research-Report-2025-4-74-Bn-Market-Opportunities-Trends-Competitive-Analysis-Strategies-and-Forecasts-2019-2024-2024-2029F-2034F.html'),
+        s('Dataintelo — AI Personal CRM', 'https://dataintelo.com/report/ai-driven-personal-crm-market'),
+        s('Growth Market Reports — Second Brain Tools', 'https://growthmarketreports.com/report/second-brain-tools-market'),
+      ],
+    },
+    sam: {
+      headline: '~$1.2–1.6B / yr by 2027',
+      proxy: 'AI-native solos and small founder/dev teams (≤10) who already pay for ≥2 AI tools (ChatGPT Plus + Claude + Cursor/Codex), use MCP clients daily, and want one cross-agent profile.',
+      calc: '7M ChatGPT for Work seats (OpenAI Oct 2025, growing 40%/2mo); solo/small-team slice ~25% = 1.75M. Plus ~2.5M Cursor + Claude Code + Codex paid devs overlapping. Addressable founder cohort ~3–4M individuals paying for ≥2 AI tools. Memory-layer ARPU $10–$25/mo. 3.5M × $300/yr × 25% conversion ceiling = ~$260M today; ~$1.2–1.6B by 2027 as MCP adoption scales with 19–30% CAGR of underlying buckets.',
+      sources: [
+        s('OpenAI — 1M business customers', 'https://openai.com/index/1-million-businesses-putting-ai-to-work/'),
+        s('Atlan — Zep vs Mem0', 'https://atlan.com/know/zep-vs-mem0/'),
+        s('TechCrunch — Mem0 $24M raise', 'https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/'),
+      ],
+    },
+    som: {
+      headline: '$18–35M ARR by year 5',
+      proxy: 'OSS-first acquisition + MCP-native distribution → ~<1% capture of SAM.',
+      assumptions: [
+        '50K–120K paid founders × $20–25/mo blended ARPU (Solo $12, Pro $29, founder-team $49)',
+        'Free quote-tweet flywheel drives 10–20× free-to-paid funnel; 3–6% conversion (consumer-prosumer median)',
+        'foundr.* ecosystem cross-sell: foundr.you ships as the canonical profile every other foundr.* product reads — bundling lifts conversion 2–3×',
+        '<1% SAM capture by year 5 (vs Mem0 80K signups in 18 months, ~5% inferred dev-cohort capture)',
+      ],
+      analog: 'Mem0: 80K dev signups, 41K GitHub stars, 13M PyPI downloads in 18 months → ~$5–10M ARR signal off $24M Series A. Letta/MemGPT: 13K+ stars at announce, $10M seed at $70M post. Personal CRM analog (Dex/Clay): ~$30–80M ARR top-of-bucket in $292M (2025) → $622M (2032) segment.',
+      sources: [
+        s('Mem0 — Series A', 'https://mem0.ai/series-a'),
+        s('TechCrunch — Letta launch', 'https://techcrunch.com/2024/09/23/letta-one-of-uc-berkeleys-most-anticipated-ai-startups-has-just-come-out-of-stealth/'),
+        s('QYResearch — Personal CRM Apps', 'https://www.qyresearch.com/reports/5665445/personal-crm-apps'),
+      ],
+    },
+    incumbents: [
+      {
+        name: 'Mem0',
+        position: '~$24M raised, ~57K GitHub stars, AWS Bedrock-default; developer-facing memory layer',
+        url: 'https://mem0.ai',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Raw conversation embedded into single vector for existence check — crashes >8K tokens (Issue #5148). Graph backend silently breaks user_id filtering on Neo4j (Issue #4232). update() with vector=None corrupts embeddings (Issue #4336). JS OSS drops memory ops with undefined IDs (Issue #4708). v3 migration breaks self-host on Qdrant (Issue #4950).' },
+          { kind: 'Business model misalignment', detail: 'Built for developers shipping AI apps, not for the human user as the unit of memory. Pricing ($249/mo for graph memory, 13× jump from Starter) presumes API usage. No consumer surface.' },
+          { kind: 'Regulatory / channel dependency', detail: 'PII pre-storage scan: none. GDPR deletion: manual. Multi-tenant isolation only at namespace level. One PII leak via a customer headline = brand crisis.' },
+          { kind: 'Cultural / incentive trap', detail: 'YC + Basis Set + AWS exclusivity = "memory layer for agents" lock-in. Cannot reposition as a founder profile without alienating the dev-infra audience driving 186M monthly API calls.' },
+        ],
+      },
+      {
+        name: 'Letta (ex-MemGPT)',
+        position: 'Berkeley spinout, $10M seed at $70M post, white-box memory, ~22K stars',
+        url: 'https://docs.letta.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'MemFS sync silent failures in remote deployments (Issue #1860). Anthropic proxy memory persistence fails silently on HTTP 200 (#3151). New agents born with blocks: [] and empty prompt_template on self-hosted 0.16.6 (#3236). Self-hosted MemFS git endpoint rejects Bearer auth (#3334).' },
+          { kind: 'Business model misalignment', detail: 'Sells stateful agent infrastructure (Letta Cloud + ADE) priced for engineers. Product surface is "Agent Development Environment" — a tool for building agents, not for being a founder with one profile. No consumer brand.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Model-agnostic positioning is virtue for devs, useless to a solo founder who picks one stack.' },
+          { kind: 'Cultural / incentive trap', detail: 'PhD-research culture (Sky Computing Lab, Ion Stoica) optimizes for novel-architecture papers. Will keep shipping "agent framework" features instead of founder-grade UX.' },
+        ],
+      },
+      {
+        name: 'ChatGPT Memory (OpenAI)',
+        position: 'Default memory for 800M+ weekly users, 7M ChatGPT for Work seats',
+        url: 'https://openai.com/index/memory-and-new-controls-for-chatgpt/',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Server-side memory budget has no warning, "Memory full" mid-project (Unite.AI). Mass deletion event Nov 6–7, 2025 — months of memories vanished, partial recovery only. Saved Memory can\'t recall specific items even when present (Bug confirmed June 2025). Hidden second memory layer (chat-history embeddings) leaks personal context into work chats (Simon Willison May 2025).' },
+          { kind: 'Business model misalignment', detail: 'Memory is a retention feature, not a standalone product. OpenAI\'s incentive is to maximize stickiness inside ChatGPT — the opposite of a portable profile. Switch to Claude/Cursor/Gemini and the memory evaporates.' },
+          { kind: 'Regulatory / channel dependency', detail: 'NYT court order forces OpenAI to retain logs indefinitely → privacy ceiling. EU GDPR Art. 19 exposure for silent profile-building. One regulatory action away from fragmenting or sunsetting.' },
+          { kind: 'Cultural / incentive trap', detail: 'Cannot ship "MCP server that lets your memory leave us." Their entire moat depends on memory not being portable. Permanent blind spot Anthropic and Google share.' },
+        ],
+      },
+    ],
+    winThesis: [
+      'MCP-first, not API-first — the product IS an MCP server. Every Claude/Cursor/Codex/ChatGPT-Desktop session reads from the same store via the open protocol.',
+      'Founder-shaped schema — stack, role, current company, OKRs, design taste, audience baked in. Generic "remember user preferences" loses to "remember Dante is solo, ships on Vercel, dislikes lime-green, runs Founder World."',
+      'Quote-tweet free tier as flywheel — Mem0/Letta have no consumer surface; ChatGPT memory is non-portable. A free tier requiring only a quote-tweet creates a public network of founder profiles + content marketing.',
+      'Privacy as positioning — all 3 incumbents have documented silent failure modes (OpenAI Nov 2025 mass deletion, Mem0 silent zero-result returns, Letta MemFS silent sync). Audit log + forget gestures by default directly weaponize competitor weaknesses.',
+      'foundr.* ecosystem bundling — every other foundr.* product reads from foundr.you. One-profile-everywhere is a structural advantage no horizontal memory vendor can replicate.',
+      '"Forget" as a feature — power users on HN cite inability to forget as a top pain. Project-scoped memory + explicit forget gestures + diffable history = the trust posture incumbents can\'t ship.',
+    ],
+  },
+
+  'foundr-bio': {
+    tam: {
+      headline: '~$24B / yr (AI research-discovery + longevity-adjacent personalized health)',
+      proxy: 'AI research-discovery software + dietary supplements + premium longevity content/clinic subscriptions.',
+      calc: 'Scientific Literature Review AI: $2.1B (2025) → $11.8B (2034) at 21.1% CAGR (Dataintelo). Academic AI Tools: $0.92B → $6.47B (2034) at 24.2% CAGR. Adjacent pull: global dietary supplements $203B (2025) → $430B (2035). Longevity economy $5.3T → $8T by 2030 (UBS via Insilico). foundr.bio sits at intersection: ~10% of research-AI ($1.2B) + ~10% of premium longevity-info wallet within supplements ($20B of $200B) = ~$24B addressable.',
+      sources: [
+        s('Dataintelo — Scientific Literature Review AI', 'https://dataintelo.com/report/scientific-literature-review-ai-market'),
+        s('Intel Market Research — Academic AI Tools', 'https://www.intelmarketresearch.com/academic-ai-tools-market-41164'),
+        s('Precedence — Dietary Supplements', 'https://www.precedenceresearch.com/dietary-supplements-market'),
+      ],
+    },
+    sam: {
+      headline: '~$1.1B / yr',
+      proxy: 'AI-native solo founders building in biotech/longevity + indie biohackers running personal protocols + longevity-curious researchers/clinicians paying for evidence subscriptions.',
+      calc: 'Elicit 400K MAU paying researchers. Consensus 400K MAU, ~$2M ARR with strongest converter the health/biosciences slice. Combined research-AI paying-pool in bio-adjacent slice ≈ 50–80K subs at ~$20/mo = ~$15–20M today, growing 6–10× by 2030. Longevity-curious paying audience: FMF Premium (~$3.7M est ARR), Examine+ (low-7-figures), AgelessRx-tier — 1–1.5M paying "evidence wallets" × $50–100/yr = $75–150M today. Roll-up: ~$100–200M today, ~$1.1B by 2030.',
+      sources: [
+        s('Elicit — Series A blog', 'https://elicit.com/blog/series-a'),
+        s('Consensus — Series A press', 'https://consensus.app/home/blog/announcing-our-11-5m-series-a-fundraise/'),
+        s('IndieHackers — Examine.com revenue', 'https://www.indiehackers.com/post/building-a-7-figure-business-by-becoming-a-definitive-resource-xDtASamd3z4jLhPPJ7QZ'),
+      ],
+    },
+    som: {
+      headline: '$12–20M ARR by year 3–5',
+      proxy: 'MCP-native distribution + longevity-specific niche + free quote-tweet growth loop.',
+      assumptions: [
+        '30K paying users × $20/mo blended (Free quote-tweet / Solo $12 / Pro $39)',
+        '60–70% from indie biohackers + longevity-curious researchers; 20% AI-native founders in longevity; 10% small VC/clinic teams',
+        'MCP-native: every Claude/Cursor/ChatGPT user with a bio interest is one /foundr-bio away from a query',
+        'Free quote-tweet tier (mirroring Consensus\'s "share consensus" feature) drives organic acquisition at near-zero CAC',
+      ],
+      analog: 'Elicit: 200K → 400K MAU in 18 months, 0 → "millions in ARR," $9M seed → $22M Series A at $100M val. Consensus: 0 → $2M ARR in 24 months with 600–1000% YoY growth. Examine.com hit ~$3–5M ARR purely on supplement-evidence subscription in 6 yr from $0. FMF Premium did 4× MRR in 10 days post-Supercast launch.',
+      sources: [
+        s('NBT — Elicit growth', 'https://nbt.substack.com/p/elicit'),
+        s('PRWeb — Consensus Series A', 'https://www.prweb.com/releases/consensus-raises-11-5-million-in-series-a-funding-to-make-the-worlds-scientific-research-discoverable-and-consumable-302222612.html'),
+        s('DoubleUp — FoundMyFitness case study', 'https://www.doubleup.agency/foundmyfitness'),
+      ],
+    },
+    incumbents: [
+      {
+        name: 'Elicit',
+        position: '400K+ MAU, $22M Series A at $100M val (Feb 2025), academic systematic-review workhorse',
+        url: 'https://elicit.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Web-app-first, no public MCP. Researchers must context-switch out of Claude/Cursor/ChatGPT to query it. Built for systematic-review-grade PRISMA workflows, not for the 10-second "is rapamycin safe weekly?" longevity question.' },
+          { kind: 'Business model misalignment', detail: 'Priced for academic/enterprise systematic-review buyer (Pro/Enterprise tiers). Longevity-curious indie buyer feels overserved on feature surface area and underserved on opinion/curation.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Cautious medical-claim posture (PBC status, "evidence-backed reasoning" framing) — they will not give a directional answer on "should I take NAD?" which is exactly what the biohacker wants.' },
+          { kind: 'Cultural / incentive trap', detail: 'Academic-coded brand. Founders cite "deploying AI to radically increase good reasoning" — does not speak to r/Nootropics or r/longevity tribe.' },
+        ],
+      },
+      {
+        name: 'Consensus',
+        position: '400K MAU, ~$2M ARR, USV-led $11.5M Series A (Aug 2024), grew rev 600–1000% in 2024',
+        url: 'https://consensus.app/pricing/',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Web-only, Semantic-Scholar-backed. No MCP, no per-query API for agents. Surfaces a "consensus meter" but does not synthesize protocol-grade guidance.' },
+          { kind: 'Business model misalignment', detail: 'Free-tier-heavy; conversion is the bottleneck (12K paying users of 400K MAU per Bloomberg). Health-curious consumer is the largest wedge they see — product is still horizontal across "creatine," "mindfulness," "cash transfers reduce poverty."' },
+          { kind: 'Regulatory / channel dependency', detail: 'Same as Elicit — claim hedging blocks the protocol layer biohackers actually want.' },
+          { kind: 'Cultural / incentive trap', detail: '"Fact check your friends" positioning is consumer-broad. Doesn\'t own the longevity narrative; users have to bring the question.' },
+        ],
+      },
+      {
+        name: 'Examine.com',
+        position: 'Independent supplement/longevity evidence database, ~2M MAU, low 7-figure ARR, bootstrapped',
+        url: 'https://examine.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Human-curated wiki. Slow to update (longevity literature ~1.6M PubMed citations/yr; cannot keep up manually). No API, no MCP, no agentic interface.' },
+          { kind: 'Business model misalignment', detail: '$19–$29/mo Examine+ subscription. Honest, anti-supplement-ad ethic = strong trust moat, but capped growth — revenue "low seven figures" after 14 years.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Safest of the three. That conservatism is also what keeps them OFF rapamycin/senolytics/peptides — the highest-volume longevity queries are not covered.' },
+          { kind: 'Cultural / incentive trap', detail: 'Nutrition/supplement-first identity. Pre-AI brand voice. Will be hard to retool toward agent-native delivery without diluting the brand promise.' },
+        ],
+      },
+    ],
+    winThesis: [
+      'MCP-native distribution from day 1 — live inside Claude/Cursor/ChatGPT as `foundr-bio`. Every existing AI-native founder + biohacker already in those IDEs is a zero-friction TAM. Elicit/Consensus/Examine all require a context-switch to a website.',
+      'Vertical longevity opinion, not horizontal academic neutrality — ship a stance ("as of May 2026, the rapamycin signal in PEARL was strong for women on 10mg/wk, null for men") with linked citations. The "fact check your friends" generic search will not.',
+      'Topic surfaces incumbents avoid — rapamycin, senolytics, NAD precursors, GLP-1 longevity off-label, peptides. High-intent terms with thin coverage on Examine.com.',
+      'Free quote-tweet tier as growth loop — mirror Consensus\'s "share consensus" share button. Every X thread on rapamycin/NMN/fisetin becomes backlink + acquisition.',
+      'Protocol-graded output — don\'t just summarize; output a dosing protocol skeleton (Mayo fisetin 20 mg/kg day 1+day 30; weekly rapamycin 4–8mg with lipid monitor) with evidence grade.',
+      'Indexes incumbents don\'t — clinicaltrials.gov status changes (NewLimit, Retro, BioAge pipelines), open protocols on rapamycin.news/LongeCity, podcast transcripts from Attia/Huberman/Rhonda Patrick.',
+    ],
+  },
+
+  'foundr-lifestyle': {
+    tam: {
+      headline: '~$220–270B / yr (men\'s apparel slice with drop/curation behavior)',
+      proxy: 'Global streetwear ($210B 2025) + DTC apparel ($63B 2024 → $178B 2033) + creator merch (~$450M social-merch GMV 2024). Stripped of overlap, conservative addressable "curated, drop-friendly, founder-aesthetic" apparel = ~$220B.',
+      calc: 'Streetwear baseline $210B (Mordor 2026) × ~30% premium/curated slice = ~$63B. + DTC men\'s apparel premium tier ~$30B (half of $63B DTC fashion, men\'s bias). + Quiet-luxury/menswear-basics premium ~$120B (ALD/FOG adjacency, ~5% of $2.4T global apparel). = ~$213B floor.',
+      sources: [
+        s('Mordor — Streetwear 2026', 'https://www.mordorintelligence.com/industry-reports/streetwear-market'),
+        s('MarketIntelo — DTC Fashion', 'https://marketintelo.com/report/global-dtc-fashion-market'),
+        s('eMarketer — Creator Merch', 'https://www.emarketer.com/insights/creator-economy/'),
+      ],
+    },
+    sam: {
+      headline: '~$3.5–5B / yr',
+      proxy: 'English-speaking AI-native founders + adjacent "tech creative class" (designers, indie hackers, AI researchers, build-in-public, prosumer creators) who self-identify as "founder-aesthetic" buyers, hate retail discovery, and pay $40–$120 for a tee/hoodie without flinching.',
+      calc: '~2M solo founders globally (Carta: 36% solo-founded H1 2025). Plus ~3–5M adjacent (Indie Hackers 140K, ~4.5K IH products + dev-Twitter + AI researchers + 500K+ paid Cursor/Replit) = ~5M addressable. Annual spend on "intentional" apparel ~$700–$1,000 (Buck Mason / ALD / FOG bracket). 5M × $800 = $4B.',
+      sources: [
+        s('Carta — Solo Founders Report', 'https://carta.com/data/solo-founders-report/'),
+        s('Hive Index — Indie Hackers community', 'https://hiveindex.io/'),
+        s('Levels.io', 'https://levelsio.com'),
+      ],
+    },
+    som: {
+      headline: '~$25–60M / yr by year 5',
+      proxy: 'Drops + Pro subscription. ALD/Eric Emanuel + Marc Lou hybrid.',
+      assumptions: [
+        '8 drops/yr × ~600 pieces × $75 × 95% sell-through (ALD/Eric Emanuel discipline) = $2.7M from drops at small scale',
+        'Year 5: 20 drops × 1,500 units × $85 × 90% sell-through = ~$23M from drops',
+        'Pro subscription ($39/mo): 10K subs by year 3, 50K by year 5 × $39 × 12 = $23.4M ARR',
+        'Free quote-tweet flag tier = top-of-funnel, $0 revenue but compounds',
+      ],
+      analog: 'Eric Emanuel: $2.8M DTC 2024, +20–50% YoY — proves a single-archetype niche drop brand sustains on Friday weekly drops with no retail. Aimé Leon Dore: ~$45M est. revenue, DTC-only after LVMH 2022 — proves curated story-led drops scale to ~$50M without traditional retail. Marc Lou: $1.03M/yr solo across 15 products. Levels.io merch: 1,576 items in year one across 47 countries from one founder\'s audience.',
+      sources: [
+        s('Grips Intelligence — Eric Emanuel', 'https://gripsintelligence.com'),
+        s('Growjo — Aimé Leon Dore', 'https://growjo.com/company/Aime_Leon_Dore'),
+        s('Marc Lou — 2025 revenue post', 'https://newsletter.marclou.com/p/i-made-1-032-000-in-2025'),
+      ],
+    },
+    incumbents: [
+      {
+        name: 'Aimé Leon Dore (ALD)',
+        position: 'Gold-standard "curated drop + cult founder" — ~$45M revenue, LVMH minority stake (2022)',
+        url: 'https://www.aimeleondore.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Pure Shopify-DTC stack. No agent-readable surface, no MCP, no API. Optimizes for queues + Discord whispers — the exact mechanic that excludes the buyer who\'d rather have an agent watch for them. When ChatGPT Instant Checkout + Stripe ACP hit critical mass, brands without agent feeds become invisible.' },
+          { kind: 'Business model misalignment', detail: 'Founder-cult fragility — Teddy Santis IS the brand. LVMH minority stake signals exit psychology. Pulled out of all 160 wholesale doors to go DTC-only → revenue ceiling tied to two stores + e-com.' },
+          { kind: 'Regulatory / channel dependency', detail: 'Apple Pay / Shop Pay at checkout; standard channel mix.' },
+          { kind: 'Cultural / incentive trap', detail: 'Aesthetic locked to \'90s Queens / hip-hop. Doesn\'t speak "AI founder." Buyer pattern-matches ALD to "I\'m cosplaying as a Brooklyn creative director" — adjacent but not native.' },
+        ],
+      },
+      {
+        name: 'Cuts Clothing',
+        position: '"Founder uniform" category leader, $250M lifetime, $300M+ True Classic 2025 competitor',
+        url: 'https://cutsclothing.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Built on classic D2C funnel (Meta ads heavy). Hit $250M with $0 capital but doing it without agent surface, without subscription, without taste profile.' },
+          { kind: 'Business model misalignment', detail: 'Always-in-stock SKUs (not drops) → no scarcity premium. Fights on margin against True Classic ($300M+ 2025) and Vuori ($1B+ at $5.5B valuation). Pyca fabric is the only moat; competitors will reverse-engineer.' },
+          { kind: 'Cultural / incentive trap', detail: 'Aesthetic is "guy who left the agency to lift weights." Quietly excludes the cerebral founder. Borrelli\'s "Steve Jobs of t-shirts" framing reads gym-bro, not builder.' },
+        ],
+      },
+      {
+        name: 'Levels.io / @levelsio merch',
+        position: 'Closest analog (single founder, taste-led drops) — ~low-six-figure run rate, 1,576 items year one to 47 countries',
+        url: 'https://levelsio.com',
+        vulnerabilities: [
+          { kind: 'Tech debt', detail: 'Print-on-demand backend. No real inventory discipline, no agent integration, no taste-profile layer. Free shipping at $100, manual product page edits.' },
+          { kind: 'Business model misalignment', detail: 'Personal-brand revenue ceiling. Hard to grow past one founder\'s audience because the brand IS Pieter — non-transferable to a "founder collective."' },
+          { kind: 'Cultural / incentive trap', detail: 'e/acc + techno-optimist messaging is one tribe inside AI-native space. Excludes design-led, quiet-luxury founder (a meaningful + higher-LTV slice).' },
+        ],
+      },
+    ],
+    winThesis: [
+      'Agent-first product surface from day one — every drop ships as an ACP-compliant MCP feed before it hits a human PDP. foundr.you reads it, alerts the founder via DM, autobuys at the Pro cap. None of ALD / Cuts / Levels.io can ship this without a year of replatforming.',
+      'Provenance per piece — each item carries a signed minted record (founder who triggered the drop, factory, dye lot, run size). Quiet-luxury buyers already pay for craft signaling; agentic buyers will pay for verifiable craft signaling.',
+      '"Drops watched by your agent" replaces FOMO — Reddit + restock-burnout literature shows the audience is exhausted by drop calendars. Position as the anti-FOMO drop brand: you literally cannot miss one because your agent didn\'t.',
+      'foundr.you cross-sell as zero-CAC distribution — every Founder World user is a pre-qualified lead. Lifestyle is the first foundr.* product where the customer base is captive.',
+      'Quote-tweet drop calendar as marketing engine — free tier with no email gate, posted to X, organic reach. Solves the Pieter problem of "personal-brand ceiling" by making the brand the collective of founders who tweet the calendar.',
+      'Tight aesthetic POV: muted, agent-friendly, quiet luxury × e/acc — Buck Mason quality, ALD discipline, but visually legible as "AI native." Wins both the quiet-luxury seeker and the e/acc tribe.',
+    ],
+  },
+}
 
 export const marketBySlug: Record<string, MarketInsight> = Object.fromEntries(
   Object.entries(baseMarketBySlug).map(([slug, base]) => [
