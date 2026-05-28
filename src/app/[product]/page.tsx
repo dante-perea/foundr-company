@@ -72,6 +72,15 @@ export default async function ProductPage({
           <PrimaryCta cta={p.hero.primary} />
           {p.hero.secondary && <SecondaryCta cta={p.hero.secondary} />}
         </div>
+
+        <p className="mt-6 text-sm">
+          <Link
+            href={`/${p.slug}/features`}
+            className="font-medium text-accent transition hover:text-accent-hover"
+          >
+            Full features &amp; pricing →
+          </Link>
+        </p>
       </section>
 
       {/* What it is */}
