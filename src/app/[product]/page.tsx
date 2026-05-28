@@ -73,12 +73,18 @@ export default async function ProductPage({
           {p.hero.secondary && <SecondaryCta cta={p.hero.secondary} />}
         </div>
 
-        <p className="mt-6 text-sm">
+        <p className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
           <Link
             href={`/${p.slug}/features`}
             className="font-medium text-accent transition hover:text-accent-hover"
           >
             Full features &amp; pricing →
+          </Link>
+          <Link
+            href={`/${p.slug}/market/insights`}
+            className="font-medium text-accent transition hover:text-accent-hover"
+          >
+            Market insights →
           </Link>
         </p>
       </section>
