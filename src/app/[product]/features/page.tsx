@@ -69,7 +69,7 @@ export default async function ProductFeaturesPage({
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="mx-auto max-w-6xl scroll-mt-12 px-6 pb-20">
+      <section id="pricing" className="mx-auto max-w-5xl scroll-mt-12 px-6 pb-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-subtle">
             Pricing
@@ -92,7 +92,7 @@ export default async function ProductFeaturesPage({
 
       {/* Feature groups */}
       <section className="border-t border-line bg-tint">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mx-auto max-w-5xl px-6 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-subtle">
               What you get

@@ -84,16 +84,18 @@ export default async function ProductPage({
       </section>
 
       {/* What it is */}
-      <section className="mx-auto max-w-3xl px-6 pb-20">
+      <section className="mx-auto max-w-3xl px-6 pb-20 text-center">
         <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-subtle">
           What it is
         </h2>
-        <p className="mt-3 text-lg leading-relaxed text-ink">{p.intro}</p>
+        <p className="mx-auto mt-3 max-w-2xl text-lg leading-relaxed text-ink">
+          {p.intro}
+        </p>
       </section>
 
       {/* How it works */}
       <section id="how" className="border-t border-line bg-tint">
-        <div className="mx-auto max-w-5xl scroll-mt-12 px-6 py-20">
+        <div className="mx-auto max-w-4xl scroll-mt-12 px-6 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
               How it works
@@ -125,7 +127,7 @@ export default async function ProductPage({
       </section>
 
       {/* Key attributes */}
-      <section className="mx-auto max-w-5xl px-6 py-20">
+      <section className="mx-auto max-w-4xl px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
             What makes it different
