@@ -1,7 +1,7 @@
 ---
-name: Paper
+name: Clean
 colors:
-  primary: "#111111"
+  primary: "#3B82F6"
   secondary: "#8B5CF6"
   success: "#16A34A"
   warning: "#D97706"
@@ -11,41 +11,41 @@ colors:
   neutral: "#FFFFFF"
 typography:
   h1:
-    fontFamily: "Montserrat"
-    fontSize: 2.5rem
+    fontFamily: "Poppins"
+    fontSize: 2rem
   body-md:
     fontFamily: "Roboto"
     fontSize: 1rem
   label-caps:
-    fontFamily: "PT Mono"
-    fontSize: 0.875rem
-  sourceScale: "14/16/18/24/32/40"
+    fontFamily: "Inconsolata"
+    fontSize: 0.75rem
+  sourceScale: "12/14/16/20/24/32"
   weights: "100, 200, 300, 400, 500, 600, 700, 800, 900"
 rounded:
   sm: 4px
   md: 8px
 spacing:
-  sm: 4px
-  md: 8px
-  sourceScale: "4/8/12/16/24/32"
+  sm: 8px
+  md: 16px
+  sourceScale: "8pt baseline grid"
 ---
 
 ## Overview
 
-Paper-textured, print-inspired design with minimal colors, clean serif/sans typography, and tactile surface qualities.
+Simplicity-focused design with ample whitespace, legible typography, and a limited color palette to reduce visual clutter.
 
 ## Style Foundations
 
 - **Visual style:** minimal, clean
-- **Typography scale:** 14/16/18/24/32/40
-- **Typography fonts:** primary=Roboto, display=Montserrat, mono=PT Mono
+- **Typography scale:** 12/14/16/20/24/32
+- **Typography fonts:** primary=Roboto, display=Poppins, mono=Inconsolata
 - **Typography weights:** 100, 200, 300, 400, 500, 600, 700, 800, 900
 - **Color palette:** primary, neutral, success, warning, danger
-- **Spacing scale:** 4/8/12/16/24/32
+- **Spacing scale:** 8pt baseline grid
 
 ## Colors
 
-- **Primary (#111111):** Token from style foundations.
+- **Primary (#3B82F6):** Token from style foundations.
 - **Secondary (#8B5CF6):** Token from style foundations.
 - **Success (#16A34A):** Token from style foundations.
 - **Warning (#D97706):** Token from style foundations.

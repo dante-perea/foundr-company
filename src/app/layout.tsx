@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
-import { Montserrat, Roboto, PT_Mono } from 'next/font/google'
+import { Poppins, Roboto, Inconsolata } from 'next/font/google'
 import './globals.css'
 
-const montserrat = Montserrat({
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-montserrat',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
   display: 'swap',
 })
 
@@ -15,10 +16,10 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-const ptMono = PT_Mono({
+const inconsolata = Inconsolata({
   subsets: ['latin'],
-  weight: '400',
-  variable: '--font-pt-mono',
+  weight: ['400', '500'],
+  variable: '--font-inconsolata',
   display: 'swap',
 })
 
@@ -42,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${roboto.variable} ${ptMono.variable}`}
+      className={`${poppins.variable} ${roboto.variable} ${inconsolata.variable}`}
     >
       <body>{children}</body>
     </html>
