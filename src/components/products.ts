@@ -424,6 +424,122 @@ export const products: Product[] = [
     why:
       'The interesting stuff happens before the product page exists. This is where you watch it happen.',
   },
+  {
+    name: 'foundr.mobile',
+    slug: 'foundr-mobile',
+    tagline: 'The foundr ecosystem in your pocket.',
+    status: 'soon',
+    hero: {
+      eyebrow: 'Native mobile for the AI-native solo founder',
+      headline: 'Every foundr tool, one tap away.',
+      subhead:
+        'A native iOS and Android app that puts your foundr.world office, foundr.run backlog, foundr.host buckets, and foundr.team retros all on your phone. Same MCP, same identity, same agents.',
+      primary: notify('foundr.mobile'),
+      secondary: BACK,
+    },
+    intro:
+      'Foundr.mobile is a native app that surfaces every foundr.* product on iOS and Android. Your office is glanceable, your backlog is voice-droppable, your agents are pushable. Same MCP, same token, same identity as the desktop.',
+    steps: [
+      { title: 'Sign in once', body: 'One foundr identity unlocks every product on mobile.' },
+      { title: 'Pin what matters', body: 'Pick the foundr.* tools you actually use; the home screen reflects your stack.' },
+      { title: 'Voice + push', body: 'Drop a backlog item by talking; get push notifications when an agent needs a human call.' },
+      { title: 'Stay synced', body: 'State lives on the server (foundr.you); the app is a thin client that always agrees with the desktop.' },
+    ],
+    attributes: [
+      { title: 'Native, not a webview', body: 'Real iOS + Android. Fast, offline-tolerant, push-native.' },
+      { title: 'One identity, every tool', body: 'Sign in once; foundr.world, run, host, team all show up.' },
+      { title: 'Voice + push as primitives', body: 'Built around dictation and notifications, not menus.' },
+    ],
+    why:
+      'Most solo founders ship from a laptop, but life happens away from it. Foundr.mobile is the consumer surface for the agentic stack — so your agents reach you, not the other way around.',
+  },
+  {
+    name: 'foundr.you',
+    slug: 'foundr-you',
+    tagline: 'Your founder profile, your agents’ memory.',
+    status: 'soon',
+    hero: {
+      eyebrow: 'Memory layer for founder identity',
+      headline: 'One profile every agent in your life can read.',
+      subhead:
+        'A persistent memory layer that stores your stack, your style, your projects, your preferences. Every foundr.* agent reads from it. Every new agent you bring online reads from it too.',
+      primary: notify('foundr.you'),
+      secondary: BACK,
+    },
+    intro:
+      'Foundr.you is the founder-identity store every other foundr.* product reads from. Your repos, your stack, your design taste, your pricing pages, your wins and your kills — versioned, queryable, and exposed over MCP. No agent in your life ever starts cold again.',
+    steps: [
+      { title: 'Bootstrap', body: 'Connect GitHub, Linear, foundr.host, Stripe, your sites. Foundr.you ingests the surface.' },
+      { title: 'Curate', body: 'Approve, edit, or kill what gets stored. You own the shape of your profile.' },
+      { title: 'Serve', body: 'Every agent (Claude Code, Cursor, foundr.work, custom) reads via MCP. New session, full context.' },
+      { title: 'Evolve', body: 'As you ship, the profile updates. Old taste fades; current taste compounds.' },
+    ],
+    attributes: [
+      { title: 'Versioned, not a chat log', body: 'Every preference is a typed fact you can edit, diff, or roll back.' },
+      { title: 'MCP-native', body: 'Every agent in your stack reads from one place; no per-app onboarding.' },
+      { title: 'You own the corpus', body: 'Export anytime; encrypted at rest; never sold.' },
+    ],
+    why:
+      'Every new chat starts cold. Every new agent re-asks what your stack is. Every founder ends up explaining themselves to ten tools a week. Foundr.you is the founder profile every agent in your life should already know.',
+  },
+  {
+    name: 'foundr.bio',
+    slug: 'foundr-bio',
+    tagline: 'Longevity research, read by your agents.',
+    status: 'soon',
+    hero: {
+      eyebrow: 'Agentic knowledge discovery for longevity biotech',
+      headline: 'Send your agents into the longevity literature.',
+      subhead:
+        'An MCP-native research layer over longevity biotech — papers, preprints, trials, protocols. Your agents read them so you don’t skim a thousand abstracts to find the one that matters.',
+      primary: notify('foundr.bio'),
+      secondary: BACK,
+    },
+    intro:
+      'Foundr.bio is what happens when you point an agent fleet at longevity biotech. Live indexes of PubMed, bioRxiv, clinicaltrials.gov, and the open-protocol literature. Ask your agent "what is new on rapamycin this week" and it actually knows.',
+    steps: [
+      { title: 'Subscribe to a thread', body: 'Pick a topic (rapamycin, mTOR, senolytics, NAD, whatever). Your agent watches it.' },
+      { title: 'Agents read for you', body: 'Daily or weekly digests, novelty-scored against what you already know.' },
+      { title: 'Pull threads', body: 'Ask for the trials, the open-protocol equivalent, the dissenting paper — your agent walks the literature.' },
+      { title: 'Build your own protocol', body: 'Save the studies, the findings, the open questions. Foundr.you remembers them across sessions.' },
+    ],
+    attributes: [
+      { title: 'Sources you can verify', body: 'Every claim links to the paper, the trial, the preprint. No hallucinated citations.' },
+      { title: 'Longevity-specific', body: 'Trained on longevity literature, not generic biomed. The taxonomy is real.' },
+      { title: 'Built by someone who reads this for fun', body: 'Opinionated, curated, biased toward solo-researcher curiosity.' },
+    ],
+    why:
+      'Most biotech literature tools are built for pharma teams. Longevity research is dominated by independent labs, open protocols, and solo researchers tracking their own n-of-1. Foundr.bio is what an obsessed solo reader would build for themselves.',
+  },
+  {
+    name: 'foundr.lifestyle',
+    slug: 'foundr-lifestyle',
+    tagline: 'Drops your agent flags. Pieces you actually wear.',
+    status: 'soon',
+    hero: {
+      eyebrow: 'Agentic-first lifestyle brand',
+      headline: 'A wardrobe your agents can shop for you.',
+      subhead:
+        'Limited apparel drops for the AI-native solo founder. Your foundr.you profile tells your agent your taste; your agent watches the drops, flags what matches, and can place the order via MCP. Each piece links back to the agent that designed or curated it.',
+      primary: notify('foundr.lifestyle'),
+      secondary: BACK,
+    },
+    intro:
+      'Foundr.lifestyle is what happens when an agentic-first founder gets tired of t-shirts with company logos. Limited drops, opinionated cuts, made-to-last fabrics. Hooked into foundr.you so your agent only flags pieces you would actually wear — and can check out for you via MCP if you give the nod.',
+    steps: [
+      { title: 'Profile', body: 'Foundr.you stores your sizing, fit, colorways, and the brands you trust.' },
+      { title: 'Watch', body: 'Your agent subscribes to the drop feed; small runs land weekly.' },
+      { title: 'Flag', body: 'Push notification when a piece matches your profile and your foundr.world credit balance. Skip or buy in one tap.' },
+      { title: 'Wear the provenance', body: 'Each piece links back to the agent or human who designed and curated it. Wear what your stack made.' },
+    ],
+    attributes: [
+      { title: 'Limited drops, no SKU sprawl', body: 'One piece, one run, until it is gone.' },
+      { title: 'Made for working from anywhere', body: 'Travel-friendly, opinionated, designed to last.' },
+      { title: 'MCP checkout', body: 'Your agent can buy on your behalf when criteria match; you stay in control.' },
+    ],
+    why:
+      'Lifestyle brands sell to everyone with a card. Foundr.lifestyle sells to the founder building agents — who would rather their agent shop than scroll through 200 product pages.',
+  },
 ]
 
 export const statusLabel: Record<ProductStatus, string> = {

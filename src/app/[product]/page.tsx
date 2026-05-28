@@ -8,6 +8,8 @@ import {
   type CtaLink,
   type Product,
 } from '@/components/products'
+import { featuresBySlug } from '@/components/product-features'
+import { marketBySlug } from '@/components/product-market'
 
 export function generateStaticParams() {
   return products.map((p) => ({ product: p.slug }))
@@ -73,20 +75,26 @@ export default async function ProductPage({
           {p.hero.secondary && <SecondaryCta cta={p.hero.secondary} />}
         </div>
 
-        <p className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-          <Link
-            href={`/${p.slug}/features`}
-            className="font-medium text-accent transition hover:text-accent-hover"
-          >
-            Full features &amp; pricing →
-          </Link>
-          <Link
-            href={`/${p.slug}/market/insights`}
-            className="font-medium text-accent transition hover:text-accent-hover"
-          >
-            Market insights →
-          </Link>
-        </p>
+        {(featuresBySlug[p.slug] || marketBySlug[p.slug]) && (
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+            {featuresBySlug[p.slug] && (
+              <Link
+                href={`/${p.slug}/features`}
+                className="font-medium text-accent transition hover:text-accent-hover"
+              >
+                Full features &amp; pricing →
+              </Link>
+            )}
+            {marketBySlug[p.slug] && (
+              <Link
+                href={`/${p.slug}/market/insights`}
+                className="font-medium text-accent transition hover:text-accent-hover"
+              >
+                Market insights →
+              </Link>
+            )}
+          </p>
+        )}
       </section>
 
       {/* What it is */}
