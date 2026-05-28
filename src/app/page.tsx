@@ -50,7 +50,7 @@ export default function Home() {
           </p>
         </div>
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
@@ -110,8 +110,8 @@ function ProductCard({ product }: { product: Product }) {
         </p>
       </div>
 
-      {/* External "Go site" button — clickable on top of the stretched link */}
-      <div className="relative z-20 mt-4 flex justify-end">
+      {/* External "Go site" button — pinned to card bottom so it aligns across rows */}
+      <div className="relative z-20 mt-auto flex justify-end pt-4">
         <a
           href={`https://${product.name}`}
           target="_blank"
