@@ -174,30 +174,31 @@ export const products: Product[] = [
   {
     name: 'foundr.work',
     slug: 'foundr-work',
-    tagline: 'Put a crew of AI agents to work on your codebase.',
+    tagline: 'Declare a worker in YAML. Ship a stateful agent.',
     status: 'soon',
     hero: {
-      eyebrow: 'Agent crew for your repo',
-      headline: 'Put a crew of agents to work on your codebase.',
+      eyebrow: 'Declarative framework for stateful agents',
+      headline: 'Write the spec. The framework ships the worker.',
       subhead:
-        'Brief them once. They open PRs, write tests, review each other, and only ping you when a human call is needed.',
+        'Foundr Workers are stateful agents you describe in a YAML file. The foundr-work npm package and a bundle of skills for Claude Code or Codex compile the spec into a worker that runs long-running tasks against your product requirements.',
       primary: notify('foundr.work'),
       secondary: BACK,
     },
     intro:
-      'Foundr.work is a manager-pattern multi-agent system for software work. One planner picks tasks off your backlog; a fleet of workers takes them through to merged PRs.',
+      'Foundr.work is an opinionated framework. You declare a worker — its objective, its tools, its state, its escalation rules — in a YAML file. The foundr-work npm package and a bundle of skills for Codex or Claude Code compile that spec into a stateful agent that picks up long-running tasks and ships them.',
     steps: [
-      { title: 'Connect', body: 'Point it at a GitHub repo and a backlog.' },
-      { title: 'Brief', body: "Define the team's working agreements once." },
-      { title: 'Watch', body: 'Agents claim, work, review, ship. You approve.' },
+      { title: 'Declare', body: "Write a YAML spec: the worker's job, its tools, its state shape, and its escalation rules." },
+      { title: 'Compile', body: 'Run the foundr-work CLI; it scaffolds the worker using the skill bundle in your Codex or Claude Code config.' },
+      { title: 'Run', body: 'The worker runs locally or on hosted runtime, picks the next task, ships, persists state.' },
+      { title: 'Iterate', body: 'Tweak the YAML, recompile. Workers are versioned by spec hash, not by code drift.' },
     ],
     attributes: [
-      { title: 'Coordinated, not solo', body: 'Agents talk to each other and divide labor.' },
-      { title: 'Human-in-the-loop', body: "Escalates the moment a decision is yours to make." },
-      { title: 'Pluggable models', body: 'Bring your own Anthropic, OpenAI, or local.' },
+      { title: 'Declarative, not imperative', body: 'The spec is the source of truth — you never write the agent loop.' },
+      { title: 'Stateful by default', body: 'Workers persist across runs, restarts, and model swaps.' },
+      { title: 'BYO CLI', body: "Skills work with Codex or Claude Code; the worker doesn't care which." },
     ],
     why:
-      'One agent in your repo is a parlor trick. A crew that ships is a teammate.',
+      'Most agent frameworks make you write Python and pray. Foundr Workers are a contract: write the YAML, get a stateful agent. The framework is the spec, not your code.',
   },
   {
     name: 'foundr.credit',
