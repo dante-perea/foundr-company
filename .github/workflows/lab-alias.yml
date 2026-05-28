@@ -1,5 +1,13 @@
 name: lab-alias
 
+# When `experiment/<slug>` is pushed, GitHub→Vercel integration auto-builds a
+# preview. This workflow waits for that preview to reach READY state, then
+# attaches `<slug>.<lab_domain>` as an alias via the Vercel REST API.
+#
+# We use the REST API directly rather than a wrapper action so we're insulated
+# from third-party-action drift (the previous amondnet/vercel-action@v25 ships
+# a Vercel CLI version that became incompatible with the public API).
+
 on:
   push:
     branches:
@@ -52,17 +60,63 @@ jobs:
           fi
           echo "slug=$SLUG" >> $GITHUB_OUTPUT
 
-      # Tag pin (v25). For tighter supply-chain control, replace with the
-      # commit SHA for v25 and let Dependabot bump it on cadence.
-      - name: Deploy + alias via amondnet/vercel-action
+      - name: Wait for Vercel preview, then attach lab alias
         id: deploy
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ steps.vercel.outputs.org_id }}
-          vercel-project-id: ${{ steps.vercel.outputs.project_id }}
-          alias-domains: ${{ steps.slug.outputs.slug }}.${{ steps.meta.outputs.lab_domain }}
-          github-comment: false  # we post our own comment below
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          TEAM_ID: ${{ steps.vercel.outputs.org_id }}
+          PROJECT_ID: ${{ steps.vercel.outputs.project_id }}
+          SLUG: ${{ steps.slug.outputs.slug }}
+          LAB_DOMAIN: ${{ steps.meta.outputs.lab_domain }}
+        run: |
+          set -e
+          ALIAS="${SLUG}.${LAB_DOMAIN}"
+
+          # Poll up to 5 minutes for the deployment matching this SHA to become READY.
+          DEPLOYMENT_ID=""
+          DEPLOYMENT_URL=""
+          for i in $(seq 1 60); do
+            RESP=$(curl -sS -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v6/deployments?teamId=$TEAM_ID&projectId=$PROJECT_ID&limit=20")
+            # Find the most recent deployment whose meta.githubCommitSha matches ours
+            ENTRY=$(echo "$RESP" | jq -r --arg sha "$GITHUB_SHA" '
+              .deployments[]
+              | select(.meta.githubCommitSha == $sha)
+              | "\(.uid) \(.url) \(.readyState)"
+            ' | head -1)
+            if [ -n "$ENTRY" ]; then
+              STATE=$(echo "$ENTRY" | awk '{print $3}')
+              if [ "$STATE" = "READY" ]; then
+                DEPLOYMENT_ID=$(echo "$ENTRY" | awk '{print $1}')
+                DEPLOYMENT_URL=$(echo "$ENTRY" | awk '{print $2}')
+                break
+              fi
+              echo "Deployment found, state=$STATE — waiting ($i/60)..."
+            else
+              echo "No deployment matching SHA $GITHUB_SHA yet ($i/60)..."
+            fi
+            sleep 5
+          done
+
+          if [ -z "$DEPLOYMENT_ID" ]; then
+            echo "::error::Timed out waiting for a READY deployment matching $GITHUB_SHA"
+            exit 1
+          fi
+          echo "Deployment READY: id=$DEPLOYMENT_ID  url=$DEPLOYMENT_URL"
+
+          # Attach the alias
+          ALIAS_RESP=$(curl -sS -X POST \
+            "https://api.vercel.com/v2/deployments/$DEPLOYMENT_ID/aliases?teamId=$TEAM_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" \
+            -d "{\"alias\":\"$ALIAS\"}")
+          ERR=$(echo "$ALIAS_RESP" | jq -r '.error.code // empty')
+          if [ -n "$ERR" ]; then
+            echo "::error::Alias attach failed: $ERR"
+            echo "$ALIAS_RESP" | jq .
+            exit 1
+          fi
+          echo "Alias attached: https://$ALIAS"
+          echo "alias_url=https://$ALIAS" >> $GITHUB_OUTPUT
 
       # Posts a fresh comment on every push. Long-lived branches accumulate
       # duplicates — acceptable for now; switch to "edit last bot comment" if
@@ -71,7 +125,7 @@ jobs:
         if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ALIAS_URL: https://${{ steps.slug.outputs.slug }}.${{ steps.meta.outputs.lab_domain }}
+          ALIAS_URL: ${{ steps.deploy.outputs.alias_url }}
         run: |
           # best-effort: gh failures here are non-fatal
           PR=$(gh pr list --head "$GITHUB_REF_NAME" --json number --jq '.[0].number' || echo "")
