@@ -35,6 +35,7 @@ export function PrimaryClerkProvider({ children }: { children: ReactNode }) {
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
+      afterSignOutUrl="/"
       allowedRedirectOrigins={clerkAllowedRedirectOrigins}
     >
       {children}
