@@ -1,8 +1,16 @@
 import { Suspense } from 'react'
 import { connection } from 'next/server'
-import { SignInPanel } from './sign-in-panel'
+import { SignInForm } from './sign-in-form'
+import { AuthSplitLayout, ContinueWithXButton } from '@/components/auth/brand'
 
-// The sign-in route is dynamic — Clerk's <SignIn /> reads request-time auth
+// Clerk crashes at runtime without a publishable key. When Clerk isn't
+// configured for this deployment (env var missing — e.g. the keyless CI
+// build), render a branded placeholder instead of mounting <SignInForm /> (the
+// Clerk hooks) so the keyless build stays green. This gate is readable in a
+// server component because NEXT_PUBLIC_* is inlined at build time.
+const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+
+// The sign-in route is dynamic — Clerk's useSignIn reads request-time auth
 // state and can't render under the Suspense fallback that wraps ClerkProvider
 // during prerender. `connection()` opts out of build-time prerender, but it
 // must run INSIDE the <Suspense> boundary (in a child), not at the page's top
@@ -12,7 +20,7 @@ import { SignInPanel } from './sign-in-panel'
 // the await inside the suspended child lets the static shell stream first.
 export default function SignInPage() {
   return (
-    <Suspense fallback={<AuthFallback />}>
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <DynamicSignIn />
     </Suspense>
   )
@@ -20,9 +28,15 @@ export default function SignInPage() {
 
 async function DynamicSignIn() {
   await connection()
-  return <SignInPanel />
-}
-
-function AuthFallback() {
-  return <main className="flex min-h-[70vh] items-center justify-center bg-page px-6" />
+  if (!CLERK_ENABLED) {
+    return (
+      <AuthSplitLayout formHeading="Sign in" formSub="Welcome back.">
+        <ContinueWithXButton disabled />
+        <p className="mt-5 text-[13px] text-[#475569]">
+          Authentication isn’t configured for this deployment yet.
+        </p>
+      </AuthSplitLayout>
+    )
+  }
+  return <SignInForm />
 }

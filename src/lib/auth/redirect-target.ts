@@ -160,3 +160,25 @@ export function getSafeSatelliteForceRedirect(
   if (!isAllowedSatelliteHost(url.host)) return null
   return url.toString()
 }
+
+/**
+ * Resolve the post-OAuth-callback destination. Prefers a cross-origin
+ * satellite force-redirect (a foundr.* satellite that initiated a fresh
+ * sign-in / sign-up and needs the user returned to it) over the same-origin
+ * `getSafeAuthRedirect` value. Used by /sso-callback so a satellite-initiated
+ * sign-in returns to the satellite instead of falling through to the home
+ * fallback.
+ *
+ * Both safety checks still apply: the satellite path must pass the
+ * `SATELLITE_HOST_ALLOWLIST` (HTTPS, known foundr.* host); anything else
+ * degrades to the same-origin-only `getSafeAuthRedirect`.
+ */
+export function getSafeCallbackRedirect(
+  searchParams: SearchParamReader,
+  options: AuthRedirectOptions = {},
+): string {
+  const satellite =
+    getSafeSatelliteForceRedirect(searchParams, 'sign_in_force_redirect_url') ??
+    getSafeSatelliteForceRedirect(searchParams, 'sign_up_force_redirect_url')
+  return satellite ?? getSafeAuthRedirect(searchParams, options)
+}
