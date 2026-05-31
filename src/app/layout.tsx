@@ -1,7 +1,16 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Poppins, Roboto, Inconsolata } from 'next/font/google'
 import './globals.css'
 import { Header, Footer } from '@/components/site'
+import { PrimaryClerkProvider } from '@/components/auth/primary-clerk-provider'
+
+// Clerk crashes at runtime without a publishable key. When Clerk isn't
+// configured for this deployment (env var missing — e.g. the keyless CI
+// build), render the app without the provider so the site still builds and
+// renders. The keys are set on Vercel later; until then this gate keeps the
+// build green.
+const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -41,7 +50,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
+  const shell = (
     <html
       lang="en"
       className={`${poppins.variable} ${roboto.variable} ${inconsolata.variable}`}
@@ -52,5 +61,16 @@ export default function RootLayout({
         <Footer />
       </body>
     </html>
+  )
+
+  if (!CLERK_ENABLED) return shell
+
+  // Suspense wrapper required when cacheComponents is enabled: ClerkProvider
+  // reads request-time auth state, and Next.js needs a Suspense boundary
+  // between cached scope and any dynamic-API consumer.
+  return (
+    <Suspense fallback={shell}>
+      <PrimaryClerkProvider>{shell}</PrimaryClerkProvider>
+    </Suspense>
   )
 }
