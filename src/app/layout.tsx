@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Poppins, Roboto, Inconsolata } from 'next/font/google'
 import './globals.css'
-import { Header, Footer } from '@/components/site'
 import { PrimaryClerkProvider } from '@/components/auth/primary-clerk-provider'
 
 // Clerk crashes at runtime without a publishable key. When Clerk isn't
@@ -55,11 +54,7 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${roboto.variable} ${inconsolata.variable}`}
     >
-      <body>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   )
 
