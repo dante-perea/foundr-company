@@ -41,7 +41,20 @@ export function SignInForm() {
       getSafeSatelliteRedirect(hashParams) ??
       getSafeSatelliteRedirect(searchParams)
     if (!target) return
-    window.location.href = target
+    // Defense-in-depth: tag the satellite return URL with Clerk's sync marker
+    // (ClerkSyncStatus.NeedsSync === 'false') before the raw forward. The
+    // satellite's middleware reads `__clerk_synced` to decide whether to run
+    // the Clerk handshake (which sets `__client_uat` on the satellite domain)
+    // or short-circuit to signedOut. Without it, an already-signed-in bounce
+    // back to a cookieless satellite document (e.g. foundr.world/oauth/grant)
+    // is declared signed-out and re-bounces here forever. With the satellite's
+    // own proxy fix in place the marker is already on `target`; re-setting it
+    // is idempotent and keeps the primary correct even if a satellite links
+    // here without it. (In production clerk-js's buildUrlWithAuth is a no-op,
+    // so the raw window.location.href is fine — only this query param matters.)
+    const url = new URL(target)
+    url.searchParams.set('__clerk_synced', 'false')
+    window.location.href = url.toString()
   }, [isSignedIn, searchParams])
 
   async function continueWithX() {
