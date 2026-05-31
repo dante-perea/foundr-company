@@ -147,6 +147,18 @@ export function getSafeSatelliteForceRedirect(
   searchParams: SearchParamReader,
   paramName: 'sign_in_force_redirect_url' | 'sign_up_force_redirect_url',
 ): string | null {
+  return readSafeSatelliteParam(searchParams, paramName)
+}
+
+// Shared host/protocol safety gate for a single named param. Returns the
+// param's value as an absolute URL string IFF it is HTTPS and its host is on
+// the SATELLITE_HOST_ALLOWLIST; otherwise null. Same-origin foundr.company
+// targets (host not on the allowlist) and non-allowlisted hosts (evil.com)
+// both return null — they are handled by the same-origin getSafeAuthRedirect.
+function readSafeSatelliteParam(
+  searchParams: SearchParamReader,
+  paramName: string,
+): string | null {
   const raw = searchParams.get(paramName)?.trim()
   if (!raw) return null
 
@@ -161,14 +173,53 @@ export function getSafeSatelliteForceRedirect(
   return url.toString()
 }
 
+// Param names a satellite may use to carry the cross-origin return URL,
+// checked in priority order. The first two are Clerk's own
+// `*_force_redirect_url` props; `redirect_url` is how the foundr.world
+// satellite middleware (oauthGrantSignInRedirect -> primarySignInRedirectUrl)
+// hands the /oauth/grant return URL to the primary sign-in.
+const SATELLITE_REDIRECT_PARAMS = [
+  'sign_in_force_redirect_url',
+  'sign_up_force_redirect_url',
+  'redirect_url',
+] as const
+
+/**
+ * General satellite-return resolver. Checks, in priority order,
+ * `sign_in_force_redirect_url`, `sign_up_force_redirect_url`, then
+ * `redirect_url`, and returns the first value that is an HTTPS URL pointing at
+ * a known foundr.* satellite host (SATELLITE_HOST_ALLOWLIST). Returns null
+ * otherwise.
+ *
+ * Same safety contract as getSafeSatelliteForceRedirect, extended to also
+ * cover the `redirect_url` param (how the foundr.world satellite middleware
+ * passes the cross-origin /oauth/grant return URL). A same-origin
+ * foundr.company `redirect_url` (its host is NOT a satellite) returns null
+ * here — that case is owned by the same-origin getSafeAuthRedirect. A
+ * non-allowlisted cross-origin host (evil.com) also returns null. This is the
+ * sole open-redirect guard: every non-null result is an HTTPS URL whose host
+ * matches SATELLITE_HOST_ALLOWLIST.
+ */
+export function getSafeSatelliteRedirect(
+  searchParams: SearchParamReader,
+): string | null {
+  for (const paramName of SATELLITE_REDIRECT_PARAMS) {
+    const match = readSafeSatelliteParam(searchParams, paramName)
+    if (match) return match
+  }
+  return null
+}
+
 /**
  * Resolve the post-OAuth-callback destination. Prefers a cross-origin
- * satellite force-redirect (a foundr.* satellite that initiated a fresh
+ * satellite return URL (a foundr.* satellite that initiated a fresh
  * sign-in / sign-up and needs the user returned to it) over the same-origin
  * `getSafeAuthRedirect` value. Used by /sso-callback so a satellite-initiated
  * sign-in returns to the satellite instead of falling through to the home
  * fallback.
  *
+ * Reads via `getSafeSatelliteRedirect`, so it covers all three carrier params
+ * (`sign_in_force_redirect_url`, `sign_up_force_redirect_url`, `redirect_url`).
  * Both safety checks still apply: the satellite path must pass the
  * `SATELLITE_HOST_ALLOWLIST` (HTTPS, known foundr.* host); anything else
  * degrades to the same-origin-only `getSafeAuthRedirect`.
@@ -177,8 +228,6 @@ export function getSafeCallbackRedirect(
   searchParams: SearchParamReader,
   options: AuthRedirectOptions = {},
 ): string {
-  const satellite =
-    getSafeSatelliteForceRedirect(searchParams, 'sign_in_force_redirect_url') ??
-    getSafeSatelliteForceRedirect(searchParams, 'sign_up_force_redirect_url')
+  const satellite = getSafeSatelliteRedirect(searchParams)
   return satellite ?? getSafeAuthRedirect(searchParams, options)
 }

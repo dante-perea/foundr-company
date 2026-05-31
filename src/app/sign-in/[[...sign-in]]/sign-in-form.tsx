@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import {
   getSafeAuthRedirect,
-  getSafeSatelliteForceRedirect,
+  getSafeSatelliteRedirect,
   paramsFromLocationHash,
 } from '@/lib/auth/redirect-target'
 import { AuthSplitLayout, ContinueWithXButton } from '@/components/auth/brand'
@@ -38,8 +38,8 @@ export function SignInForm() {
     if (typeof window === 'undefined') return
     const hashParams = paramsFromLocationHash(window.location.hash)
     const target =
-      getSafeSatelliteForceRedirect(hashParams, 'sign_in_force_redirect_url') ??
-      getSafeSatelliteForceRedirect(searchParams, 'sign_in_force_redirect_url')
+      getSafeSatelliteRedirect(hashParams) ??
+      getSafeSatelliteRedirect(searchParams)
     if (!target) return
     window.location.href = target
   }, [isSignedIn, searchParams])
@@ -67,8 +67,8 @@ export function SignInForm() {
           ? new URLSearchParams()
           : paramsFromLocationHash(window.location.hash)
       const satelliteTarget =
-        getSafeSatelliteForceRedirect(hashParams, 'sign_in_force_redirect_url') ??
-        getSafeSatelliteForceRedirect(searchParams, 'sign_in_force_redirect_url')
+        getSafeSatelliteRedirect(hashParams) ??
+        getSafeSatelliteRedirect(searchParams)
       const callbackUrl = satelliteTarget
         ? `/sso-callback?sign_in_force_redirect_url=${encodeURIComponent(satelliteTarget)}`
         : redirectUrl === '/'
